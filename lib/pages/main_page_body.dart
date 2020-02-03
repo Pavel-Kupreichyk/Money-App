@@ -21,7 +21,12 @@ class MainPageBody extends StatelessWidget {
               child: ListView.separated(
                   itemBuilder: (_, index) {
                     return ListTile(
-                      title: Text(customers[index].firstName),
+                      title: Text(
+                          '${customers[index].middleName} ${customers[index].firstName} ${customers[index].lastName}'),
+                      subtitle: Text('Город: ${customers[index].city}\n'
+                          'Адрес: ${customers[index].address}\n'
+                          'Дата рождения: ${customers[index].dateOfBirth}\n'),
+                      trailing: IconButton(icon: Icon(Icons.edit)),
                     );
                   },
                   separatorBuilder: (_, index) {

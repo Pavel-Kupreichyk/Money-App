@@ -23,7 +23,7 @@ class Customer {
   final bool isPensioner;
   final bool isDutyBound;
 
-  Customer(
+  Customer({
       this.firstName,
       this.middleName,
       this.lastName,
@@ -46,7 +46,7 @@ class Customer {
       this.disabilityStatus,
       this.monthlyIncome,
       this.isPensioner,
-      this.isDutyBound);
+      this.isDutyBound});
 
 //  factory Engineer.fromJSON(Map<dynamic, dynamic> parsedJson) {
 //    if (parsedJson == null) {
