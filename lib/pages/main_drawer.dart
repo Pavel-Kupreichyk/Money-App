@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:money_app/services/navigation_service.dart';
+import 'package:money_app/support/navigation_info.dart';
+import 'package:provider/provider.dart';
+
+enum MainDrawerButtonType { add, showGroup, deposit, credit }
 
 class MainDrawer extends StatelessWidget {
+  final MainDrawerButtonType ignoredButton;
+  MainDrawer({this.ignoredButton});
+
   @override
   Widget build(BuildContext context) {
+    var navService = Provider.of<NavigationService>(context);
+
     return Drawer(
         child: SafeArea(
       child: SingleChildScrollView(
@@ -19,10 +29,18 @@ class MainDrawer extends StatelessWidget {
             ListTile(
               title: Text('Добавить Клиента'),
               leading: Icon(Icons.add),
+              onTap: () => ignoredButton != MainDrawerButtonType.add
+                  ? navService
+                      .pushReplacementWithNavInfo(NavigationInfo.editCustomer())
+                  : navService.pop(),
             ),
             ListTile(
               title: Text('Управление Клиентами'),
               leading: Icon(Icons.group),
+              onTap: () => ignoredButton != MainDrawerButtonType.showGroup
+                  ? navService
+                      .pushReplacementWithNavInfo(NavigationInfo.main())
+                  : navService.pop(),
             ),
             ListTile(
               title: Text('Открыть Депозит'),

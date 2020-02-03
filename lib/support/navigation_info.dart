@@ -5,7 +5,11 @@ class NavigationInfo {
   final String route;
   final Object args;
 
-  NavigationInfo.login()
+  NavigationInfo.main()
       : route = RouteGenerator.mainRoute,
+        args = null;
+
+  NavigationInfo.editCustomer()
+      : route = RouteGenerator.editCustomerRoute,
         args = null;
 }

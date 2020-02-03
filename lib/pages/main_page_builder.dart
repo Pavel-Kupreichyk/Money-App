@@ -17,7 +17,9 @@ class MainPageBuilder extends StatelessWidget {
             title: Text('Money App'),
           ),
           body: MainPageBody(bloc),
-          drawer: MainDrawer(),
+          drawer: MainDrawer(
+            ignoredButton: MainDrawerButtonType.showGroup,
+          ),
         ),
       ),
     );

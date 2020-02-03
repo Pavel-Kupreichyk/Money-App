@@ -22,7 +22,7 @@ class MainPageBody extends StatelessWidget {
                   itemBuilder: (_, index) {
                     return ListTile(
                       title: Text(
-                          '${customers[index].middleName} ${customers[index].firstName} ${customers[index].lastName}'),
+                          '${customers[index].lastName} ${customers[index].firstName} ${customers[index].middleName}'),
                       subtitle: Text('Город: ${customers[index].city}\n'
                           'Адрес: ${customers[index].address}\n'
                           'Дата рождения: ${customers[index].dateOfBirth}\n'),

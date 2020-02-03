@@ -7,7 +7,7 @@ class DbService {
         () => [
               Customer(
                   firstName: 'Антон',
-                  middleName: 'Антонов',
+                  middleName: 'Антонович',
                   lastName: 'Антоненко',
                   dateOfBirth: '23.04.99',
                   city: 'Минск',
