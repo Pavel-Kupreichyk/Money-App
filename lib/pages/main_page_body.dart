@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_app/blocs/main_page_bloc.dart';
+import 'package:money_app/models/customer.dart';
 
 class MainPageBody extends StatelessWidget {
   final MainBloc _bloc;
@@ -7,6 +8,28 @@ class MainPageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return SafeArea(
+      child: StreamBuilder<List<Customer>>(
+          stream: _bloc.customers,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
+            var customers = snapshot.data;
+            return RefreshIndicator(
+              onRefresh: () => _bloc.updateCustomers(),
+              child: ListView.separated(
+                  itemBuilder: (_, index) {
+                    return ListTile(
+                      title: Text(customers[index].firstName),
+                    );
+                  },
+                  separatorBuilder: (_, index) {
+                    return Divider(height: 0);
+                  },
+                  itemCount: customers.length),
+            );
+          }),
+    );
   }
 }

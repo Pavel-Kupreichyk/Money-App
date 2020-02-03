@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_app/services/db_service.dart';
 import 'package:money_app/services/navigation_service.dart';
 import 'package:money_app/support/route_generator.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,8 @@ void main() {
   runApp(
     MultiProvider(
       providers: <SingleChildWidget>[
-        Provider<NavigationService>.value(value: navService)
+        Provider<NavigationService>.value(value: navService),
+        Provider<DbService>.value(value: DbService())
       ],
       child: App(RouteGenerator(), navKey),
     ),
