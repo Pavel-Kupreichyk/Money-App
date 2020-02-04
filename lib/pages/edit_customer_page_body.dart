@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:money_app/blocs/edit_customer_page_bloc.dart';
 import 'package:money_app/services/navigation_service.dart';
+import 'package:money_app/support/navigation_info.dart';
 import 'package:money_app/widgets/date_picker_field.dart';
+import 'package:money_app/widgets/masked_text_field.dart';
 import 'package:provider/provider.dart';
 
 class EditCustomerPageBody extends StatelessWidget {
@@ -47,7 +48,7 @@ class EditCustomerPageBody extends StatelessWidget {
                   title: '*Дата рождения',
                   onSaved: (val) => _bloc.dateOfBirth = val.toString()),
               _buildTitle('Паспортные данные'),
-              _maskedTextInput(
+              MaskedTextField(
                 '*Серия паспорта',
                 'Введите серию паспорта',
                 r'[A-Z]',
@@ -56,10 +57,10 @@ class EditCustomerPageBody extends StatelessWidget {
                 _bloc.passportSeries,
                 (val) => _bloc.passportSeries = val,
               ),
-              _maskedTextInput(
+              MaskedTextField(
                   '*Номер паспорта',
                   'Введите номер паспорта',
-                  r'[A-Z0-9]',
+                  r'[0-9]',
                   '#######',
                   Icons.edit,
                   _bloc.passportNum,
@@ -69,7 +70,7 @@ class EditCustomerPageBody extends StatelessWidget {
                   initDate: DateTime.parse(_bloc.passportDateOfEmit),
                   title: '*Дата выдачи паспорта',
                   onSaved: (val) => _bloc.passportDateOfEmit = val.toString()),
-              _maskedTextInput(
+              MaskedTextField(
                 '*Идентификационный номер',
                 'Введите идентификационный номер',
                 r'[A-Z0-9]',
@@ -98,7 +99,7 @@ class EditCustomerPageBody extends StatelessWidget {
                   _bloc.address,
                   (val) => _bloc.address = val),
               _buildTitle('Дополнительная информация'),
-              _maskedTextInput(
+              MaskedTextField(
                   'Домашний телефон',
                   'Введите домашний телефон',
                   r'[0-9]',
@@ -108,7 +109,7 @@ class EditCustomerPageBody extends StatelessWidget {
                   (val) => _bloc.homePhoneNumber = val,
                   input: TextInputType.number,
                   isReq: false),
-              _maskedTextInput(
+              MaskedTextField(
                   'Мобильный телефон',
                   'Введите мобильный телефон',
                   r'[0-9]',
@@ -240,36 +241,8 @@ class EditCustomerPageBody extends StatelessWidget {
     );
   }
 
-  Widget _maskedTextInput(String label, String emptyError, String regExp,
-      String mask, IconData icon, String initial, Function(String) onSaved,
-      {TextInputType input = TextInputType.text, bool isReq = true}) {
-    var maskFormatter =
-        MaskTextInputFormatter(mask: mask, filter: {"#": RegExp(regExp)});
-    return TextFormField(
-      keyboardType: input,
-      initialValue: initial,
-      onSaved: onSaved,
-      inputFormatters: [maskFormatter],
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: mask,
-        suffixIcon: Icon(
-          icon,
-          color: Colors.grey,
-        ),
-      ),
-      validator: (value) {
-        if (!isReq && value.trim().isEmpty) {
-          return null;
-        } else if (!maskFormatter.isFill()) {
-          return emptyError;
-        }
-        return null;
-      },
-    );
-  }
-
   Widget _submitButton(BuildContext context) {
+    var navService = Provider.of<NavigationService>(context);
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: Center(
@@ -284,7 +257,7 @@ class EditCustomerPageBody extends StatelessWidget {
                 if (await _bloc.addEditCustomer()) {
                   Scaffold.of(context).showSnackBar(SnackBar(
                       content: Text('Клиент успешно добавлен/изменен')));
-                  Provider.of<NavigationService>(context).pop();
+                  navService.pushReplacementWithNavInfo(NavigationInfo.main());
                 } else {
                   Scaffold.of(context).showSnackBar(
                       SnackBar(content: Text('Ошибка при обработке')));
