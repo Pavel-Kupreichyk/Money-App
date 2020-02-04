@@ -28,7 +28,6 @@ class _DatePickerFieldState extends State<DatePickerField> {
 
   @override
   void dispose() {
-    print('as');
     _controller.dispose();
     super.dispose();
   }
