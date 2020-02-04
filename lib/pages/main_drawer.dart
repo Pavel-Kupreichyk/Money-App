@@ -31,7 +31,7 @@ class MainDrawer extends StatelessWidget {
               leading: Icon(Icons.add),
               onTap: () => ignoredButton != MainDrawerButtonType.add
                   ? navService
-                      .pushReplacementWithNavInfo(NavigationInfo.editCustomer())
+                      .pushReplacementWithNavInfo(NavigationInfo.addCustomer())
                   : navService.pop(),
             ),
             ListTile(

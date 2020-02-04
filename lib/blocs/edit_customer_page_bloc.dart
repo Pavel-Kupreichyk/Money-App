@@ -30,32 +30,73 @@ class EditCustomerBloc implements Disposable {
   final DbService _dbService;
   final Customer _currCustomer;
 
-  EditCustomerBloc(this._dbService, [this._currCustomer]){
-    if(_currCustomer != null) {
-      firstName = _currCustomer.firstName;
-      middleName = _currCustomer.middleName;
-      lastName = _currCustomer.lastName;
-      dateOfBirth = _currCustomer.dateOfBirth;
-      passportSeries = _currCustomer.passportSeries;
-      passportNum = _currCustomer.passportNum;
-      passportEmitter = _currCustomer.passportEmitter;
-      passportDateOfEmit = _currCustomer.passportDateOfEmit;
-      id = _currCustomer.id;
-      placeOfBirth = _currCustomer.placeOfBirth;
-      city = _currCustomer.city;
-      address = _currCustomer.address;
-      mobilePhoneNumber = _currCustomer.mobilePhoneNumber;
-      homePhoneNumber = _currCustomer.homePhoneNumber;
-      email = _currCustomer.email;
-      workPlace = _currCustomer.workPlace;
-      workPosition = _currCustomer.workPosition;
-      familyStatus = _currCustomer.familyStatus;
-      citizenship = _currCustomer.citizenship;
-      disabilityStatus = _currCustomer.disabilityStatus;
-      monthlyIncome = _currCustomer.monthlyIncome;
-      isPensioner = _currCustomer.isPensioner;
-      isDutyBound = _currCustomer.isDutyBound;
+  EditCustomerBloc(this._dbService, [this._currCustomer]) {
+    if (_currCustomer != null) {
+      if (_currCustomer.dateOfBirth != null &&
+          DateTime.tryParse(_currCustomer.dateOfBirth) != null) {
+        dateOfBirth = _currCustomer.dateOfBirth;
+      }
+      if (_currCustomer.passportDateOfEmit != null &&
+          DateTime.tryParse(_currCustomer.passportDateOfEmit) != null) {
+        passportDateOfEmit = _currCustomer.passportDateOfEmit;
+      }
+      firstName = _currCustomer.firstName ?? '';
+      middleName = _currCustomer.middleName ?? '';
+      lastName = _currCustomer.lastName ?? '';
+      passportSeries = _currCustomer.passportSeries ?? '';
+      passportNum = _currCustomer.passportNum ?? '';
+      passportEmitter = _currCustomer.passportEmitter ?? '';
+      id = _currCustomer.id ?? '';
+      placeOfBirth = _currCustomer.placeOfBirth ?? '';
+      city = _currCustomer.city ?? 'Минск';
+      address = _currCustomer.address ?? '';
+      mobilePhoneNumber = _currCustomer.mobilePhoneNumber ?? '';
+      homePhoneNumber = _currCustomer.homePhoneNumber ?? '';
+      email = _currCustomer.email ?? '';
+      workPlace = _currCustomer.workPlace ?? '';
+      workPosition = _currCustomer.workPosition ?? '';
+      familyStatus = _currCustomer.familyStatus ?? 'Свободен/Свободна';
+      citizenship = _currCustomer.citizenship ?? 'Беларусь';
+      disabilityStatus = _currCustomer.disabilityStatus ?? 'Нет';
+      monthlyIncome = _currCustomer.monthlyIncome ?? '';
+      isPensioner = _currCustomer.isPensioner ?? false;
+      isDutyBound = _currCustomer.isDutyBound ?? false;
     }
+  }
+
+  Future<bool> addEditCustomer() async {
+    //REPLACEMENT IS BETTER
+    if (_currCustomer != null) {
+      if (!await _dbService.deleteCustomer(id)) {
+        return false;
+      }
+    }
+    var newCustomer = Customer(
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
+        dateOfBirth: dateOfBirth,
+        passportSeries: passportSeries,
+        passportNum: passportNum,
+        passportEmitter: passportEmitter,
+        passportDateOfEmit: passportDateOfEmit,
+        id: id,
+        placeOfBirth: placeOfBirth,
+        city: city,
+        address: address,
+        mobilePhoneNumber: mobilePhoneNumber,
+        homePhoneNumber: homePhoneNumber,
+        email: email,
+        workPlace: workPlace,
+        workPosition: workPosition,
+        familyStatus: familyStatus,
+        citizenship: citizenship,
+        disabilityStatus: disabilityStatus,
+        monthlyIncome: monthlyIncome,
+        isPensioner: isPensioner,
+        isDutyBound: isDutyBound);
+
+    return await _dbService.addCustomer(newCustomer);
   }
 
   @override

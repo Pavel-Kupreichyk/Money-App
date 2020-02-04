@@ -6,6 +6,7 @@ import 'package:money_app/pages/main_page_builder.dart';
 class RouteGenerator {
   static const mainRoute = '/main';
   static const editCustomerRoute = '/editCustomer';
+  static const addCustomerRoute = '/addCustomer';
 
   Widget get initPage => MainPageBuilder();
 
@@ -17,8 +18,11 @@ class RouteGenerator {
       case mainRoute:
         newScreen = MainPageBuilder();
         break;
+      case addCustomerRoute:
+        newScreen = EditCustomerPageBuilder.add();
+        break;
       case editCustomerRoute:
-        newScreen = EditCustomerPageBuilder();
+        newScreen = EditCustomerPageBuilder.edit(args);
         break;
       default:
         newScreen = Text('ERROR');

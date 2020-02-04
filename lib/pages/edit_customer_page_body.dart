@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:money_app/blocs/edit_customer_page_bloc.dart';
+import 'package:money_app/services/navigation_service.dart';
 import 'package:money_app/widgets/date_picker_field.dart';
+import 'package:provider/provider.dart';
 
 class EditCustomerPageBody extends StatelessWidget {
   final EditCustomerBloc _bloc;
@@ -43,7 +45,6 @@ class EditCustomerPageBody extends StatelessWidget {
               DatePickerField(
                   initDate: DateTime.parse(_bloc.dateOfBirth),
                   title: '*Дата рождения',
-                  validator: (s) => s.toString(),
                   onSaved: (val) => _bloc.dateOfBirth = val.toString()),
               _buildTitle('Паспортные данные'),
               _maskedTextInput(
@@ -67,7 +68,6 @@ class EditCustomerPageBody extends StatelessWidget {
               DatePickerField(
                   initDate: DateTime.parse(_bloc.passportDateOfEmit),
                   title: '*Дата выдачи паспорта',
-                  validator: (s) => s.toString(),
                   onSaved: (val) => _bloc.passportDateOfEmit = val.toString()),
               _maskedTextInput(
                 '*Идентификационный номер',
@@ -82,7 +82,7 @@ class EditCustomerPageBody extends StatelessWidget {
                   '*Место рождения',
                   'Введите место рождения',
                   'Введите корректное место рождения',
-                  r'^[а-яА-Я\s]+$',
+                  r'^[а-яА-Я\s\.0-9]+$',
                   _bloc.placeOfBirth,
                   (val) => _bloc.placeOfBirth = val),
               _selectableField(
@@ -94,7 +94,7 @@ class EditCustomerPageBody extends StatelessWidget {
                   '*Адрес фактического проживания',
                   'Введите адрес проживания',
                   'Введите корректный адрес проживания',
-                  r'^[а-яА-Я\s]+$',
+                  r'^[а-яА-Я\s\.0-9]+$',
                   _bloc.address,
                   (val) => _bloc.address = val),
               _buildTitle('Дополнительная информация'),
@@ -131,7 +131,7 @@ class EditCustomerPageBody extends StatelessWidget {
                   'Место работы',
                   'Введите место работы',
                   'Введите корректное место работы',
-                  r'^[а-яА-Яa-zA-Z\s]+$',
+                  r'^[а-яА-Яa-zA-Z\s\.]+$',
                   _bloc.workPlace,
                   (val) => _bloc.workPlace = val,
                   isReq: false),
@@ -277,11 +277,18 @@ class EditCustomerPageBody extends StatelessWidget {
           widthFactor: 1,
           child: RaisedButton(
             child: Text('Добавить'),
-            onPressed: () {
+            onPressed: () async {
               FocusScope.of(context).requestFocus(FocusNode());
               if (_formKey.currentState.validate()) {
-                Scaffold.of(context)
-                    .showSnackBar(SnackBar(content: Text('Processing Data')));
+                _formKey.currentState.save();
+                if (await _bloc.addEditCustomer()) {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text('Клиент успешно добавлен/изменен')));
+                  Provider.of<NavigationService>(context).pop();
+                } else {
+                  Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text('Ошибка при обработке')));
+                }
               }
             },
           ),

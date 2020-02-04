@@ -44,8 +44,8 @@ class _DatePickerFieldState extends State<DatePickerField> {
       ),
       onTap: pickDate,
       controller: _controller,
-      validator: (_) => widget.validator(_currDateTime),
-      onSaved: (_) => widget.onSaved(_currDateTime),
+      validator: (_) => widget.validator != null ? widget.validator(_currDateTime) : null,
+      onSaved: (_) => widget.validator != null ? widget.onSaved(_currDateTime) : null,
       readOnly: true,
     );
   }

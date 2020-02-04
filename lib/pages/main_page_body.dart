@@ -26,7 +26,10 @@ class MainPageBody extends StatelessWidget {
                       subtitle: Text('Город: ${customers[index].city}\n'
                           'Адрес: ${customers[index].address}\n'
                           'Дата рождения: ${customers[index].dateOfBirth}\n'),
-                      trailing: IconButton(icon: Icon(Icons.edit)),
+                      trailing: IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () => _bloc.editCustomer(index),
+                      ),
                     );
                   },
                   separatorBuilder: (_, index) {
