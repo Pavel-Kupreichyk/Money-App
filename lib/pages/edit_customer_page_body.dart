@@ -122,6 +122,14 @@ class EditCustomerPageBody extends StatelessWidget {
                   r'^[а-яА-Я]+$',
                   _bloc.workPosition,
                   (val) => _bloc.workPosition = val),
+              _buildTextInput(
+                  'Ежемесячный доход',
+                  'Введите ежемесачный доход',
+                  'Введите корректное значение',
+                  r'^[0-9]+$',
+                  _bloc.monthlyIncome,
+                  (val) => _bloc.monthlyIncome = val,
+                  TextInputType.number),
               _selectableField(
                   'Семейное положение',
                   ['Свободен/Свободна', 'Женат/Замужем'],
@@ -134,16 +142,16 @@ class EditCustomerPageBody extends StatelessWidget {
                   ['Нет', '1 группа', '2 группа', '3 группа'],
                   _bloc.disabilityStatus,
                   (val) => _bloc.disabilityStatus = val),
-              //пенсионет
-              _buildTextInput(
-                  'Ежемесячный доход',
-                  'Введите ежемесачный доход',
-                  'Введите корректное значение',
-                  r'^[0-9]+$',
-                  _bloc.monthlyIncome,
-                  (val) => _bloc.monthlyIncome = val,
-                  TextInputType.number),
-              //военнообязанный
+              _selectableField(
+                  'Пенсионер',
+                  ['Нет', 'Да'],
+                  _bloc.isPensioner ? 'Да' : 'Нет',
+                  (val) => _bloc.isPensioner = val == 'Да'),
+              _selectableField(
+                  'Военнообязанный',
+                  ['Нет', 'Да'],
+                  _bloc.isDutyBound ? 'Да' : 'Нет',
+                  (val) => _bloc.isDutyBound = val == 'Да'),
               _submitButton(context),
             ],
           ),
