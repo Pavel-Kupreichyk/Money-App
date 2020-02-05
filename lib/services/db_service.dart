@@ -1,32 +1,47 @@
 import 'package:money_app/models/customer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DbService {
-  var customers = [
-    Customer(
-        firstName: 'Антон',
-        middleName: 'Антонович',
-        lastName: 'Антоненко',
-        dateOfBirth: '23.04.99',
-        city: 'Минск',
-        address: 'ул.Платонова д.4'),
-    Customer(
-        firstName: 'Павел',
-        middleName: 'Павлов',
-        lastName: 'Павленко',
-        dateOfBirth: '13.06.89',
-        city: 'Брест',
-        address: 'ул.Менделеева д.40')
-  ];
-  Future<List<Customer>> fetchCustomers() {
-    return Future.delayed(Duration(milliseconds: 600), () => customers);
+  Future<List<Customer>> fetchCustomers() async{
+    var snapshot = await Firestore.instance
+        .collection('Customers').getDocuments();
+    return snapshot.documents.map((doc) => Customer.fromSnapshot(doc)).toList();
   }
 
-  Future<bool> deleteCustomer(String id) {
-    return Future.delayed(Duration(milliseconds: 600), () => true);
+  Future<void> deleteCustomer(String id) async{
+    await Firestore.instance
+        .collection('Customers')
+        .document(id).delete();
   }
 
-  Future<bool> addCustomer(Customer customer) {
-    customers.add(customer);
-    return Future.delayed(Duration(milliseconds: 600), () => true);
+  Future<void> addCustomer(Customer customer) async{
+    await Firestore.instance
+        .collection('Customers')
+        .document(customer.id)
+        .setData({
+      'firstName': customer.firstName,
+      'middleName': customer.middleName,
+      'lastName': customer.lastName,
+      'dateOfBirth': customer.dateOfBirth,
+      'passportSeries': customer.passportSeries,
+      'passportNum': customer.passportNum,
+      'passportEmitter': customer.passportEmitter,
+      'passportDateOfEmit': customer.passportDateOfEmit,
+      'id': customer.id,
+      'placeOfBirth': customer.placeOfBirth,
+      'city': customer.city,
+      'address': customer.address,
+      'mobilePhoneNumber': customer.mobilePhoneNumber,
+      'homePhoneNumber': customer.homePhoneNumber,
+      'email': customer.email,
+      'workPlace': customer.workPlace,
+      'workPosition': customer.workPosition,
+      'familyStatus': customer.familyStatus,
+      'citizenship': customer.citizenship,
+      'disabilityStatus': customer.disabilityStatus,
+      'monthlyIncome': customer.monthlyIncome,
+      'isPensioner': customer.isPensioner,
+      'isDutyBound': customer.isDutyBound
+    });
   }
 }

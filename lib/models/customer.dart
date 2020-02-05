@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Customer {
   final String firstName;
   final String middleName;
@@ -23,8 +25,8 @@ class Customer {
   final bool isPensioner;
   final bool isDutyBound;
 
-  Customer({
-      this.firstName,
+  Customer(
+      {this.firstName,
       this.middleName,
       this.lastName,
       this.dateOfBirth,
@@ -48,24 +50,34 @@ class Customer {
       this.isPensioner,
       this.isDutyBound});
 
-//  factory Engineer.fromJSON(Map<dynamic, dynamic> parsedJson) {
-//    if (parsedJson == null) {
-//      return null;
-//    }
-//    String techStack = parsedJson['Tech Stack'] ?? '';
-//    Set<String> techStackSet =
-//        Set.of(techStack.split(';').map((skill) => skill.trim()));
-//
-//    return Engineer(
-//      name: parsedJson['Name'] ?? '',
-//      level: parsedJson['Level'] ?? '',
-//      skills: parsedJson['Skills'] ?? '',
-//      techStack: techStack,
-//      techStackSet: techStackSet,
-//      foreignLanguages: parsedJson['Foreign Languages'] ?? '',
-//      location: parsedJson['Location'] ?? '',
-//      group: parsedJson['Group'] ?? '',
-//      id: parsedJson['Id'],
-//    );
-//  }
+  factory Customer.fromSnapshot(DocumentSnapshot snapshot) {
+    if (snapshot == null) {
+      return null;
+    }
+
+    return Customer(
+        firstName: snapshot['firstName'],
+        middleName: snapshot['middleName'],
+        lastName: snapshot['lastName'],
+        dateOfBirth: snapshot['dateOfBirth'],
+        passportSeries: snapshot['passportSeries'],
+        passportNum: snapshot['passportNum'],
+        passportEmitter: snapshot['passportEmitter'],
+        passportDateOfEmit: snapshot['passportDateOfEmit'],
+        id: snapshot['id'],
+        placeOfBirth: snapshot['placeOfBirth'],
+        city: snapshot['city'],
+        address: snapshot['address'],
+        mobilePhoneNumber: snapshot['mobilePhoneNumber'],
+        homePhoneNumber: snapshot['homePhoneNumber'],
+        email: snapshot['email'],
+        workPlace: snapshot['workPlace'],
+        workPosition: snapshot['workPosition'],
+        familyStatus: snapshot['familyStatus'],
+        citizenship: snapshot['citizenship'],
+        disabilityStatus: snapshot['disabilityStatus'],
+        monthlyIncome: snapshot['monthlyIncome'],
+        isPensioner: snapshot['isPensioner'],
+        isDutyBound: snapshot['isDutyBound']);
+  }
 }

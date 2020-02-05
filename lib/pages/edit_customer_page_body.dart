@@ -254,14 +254,13 @@ class EditCustomerPageBody extends StatelessWidget {
               FocusScope.of(context).requestFocus(FocusNode());
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-                if (await _bloc.addEditCustomer()) {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text('Клиент успешно добавлен/изменен')));
-                  navService.pushReplacementWithNavInfo(NavigationInfo.main());
-                } else {
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('Ошибка при обработке')));
-                }
+                _bloc.addEditCustomer();
+                Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text('Клиент успешно добавлен/изменен.')));
+                navService.pushReplacementWithNavInfo(NavigationInfo.main());
+              } else {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text('Некоторые поля заполнены некорректно.')));
               }
             },
           ),

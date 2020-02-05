@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "347374768553",
+    "firebase_url": "https://moneyapp-abfdf.firebaseio.com",
+    "project_id": "moneyapp-abfdf",
+    "storage_bucket": "moneyapp-abfdf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347374768553:android:de8e7689ce22cd68af34b8",
+        "android_client_info": {
+          "package_name": "com.kupreichyk.pavel.money_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "347374768553-n88q4i2m406a49ot9fmou549kqkma9u0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgUH_r46crcLYKtisSjC7dL2cfZ1KWcz8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "347374768553-n88q4i2m406a49ot9fmou549kqkma9u0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

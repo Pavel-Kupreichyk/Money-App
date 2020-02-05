@@ -28,6 +28,7 @@ class MainPageBody extends StatelessWidget {
                           'Дата рождения: ${customers[index].dateOfBirth}\n'),
                       trailing: IconButton(
                         icon: Icon(Icons.edit),
+                        color: Colors.blue,
                         onPressed: () => _bloc.editCustomer(index),
                       ),
                     );

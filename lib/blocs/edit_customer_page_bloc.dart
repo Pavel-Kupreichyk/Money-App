@@ -64,12 +64,9 @@ class EditCustomerBloc implements Disposable {
     }
   }
 
-  Future<bool> addEditCustomer() async {
-    //REPLACEMENT IS BETTER
+  Future<void> addEditCustomer() async {
     if (_currCustomer != null) {
-      if (!await _dbService.deleteCustomer(id)) {
-        return false;
-      }
+      await _dbService.deleteCustomer(id);
     }
     var newCustomer = Customer(
         firstName: firstName,
@@ -95,8 +92,7 @@ class EditCustomerBloc implements Disposable {
         monthlyIncome: monthlyIncome,
         isPensioner: isPensioner,
         isDutyBound: isDutyBound);
-
-    return await _dbService.addCustomer(newCustomer);
+    await _dbService.addCustomer(newCustomer);
   }
 
   @override
