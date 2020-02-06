@@ -8,11 +8,11 @@ class EditCustomerBloc implements Disposable {
   String firstName = '';
   String middleName = '';
   String lastName = '';
-  String dateOfBirth = DateTime.now().toString();
+  DateTime dateOfBirth = DateTime.now();
   String passportSeries = '';
   String passportNum = '';
   String passportEmitter = '';
-  String passportDateOfEmit = DateTime.now().toString();
+  DateTime passportDateOfEmit = DateTime.now();
   String id = '';
   String placeOfBirth = '';
   String city = 'Минск';
@@ -32,16 +32,12 @@ class EditCustomerBloc implements Disposable {
   final DbService _dbService;
   final Customer _currCustomer;
 
+  String get btnName => _currCustomer == null ? 'Добавить' : 'Изменить';
+
   EditCustomerBloc(this._dbService, [this._currCustomer]) {
     if (_currCustomer != null) {
-      if (_currCustomer.dateOfBirth != null &&
-          DateTime.tryParse(_currCustomer.dateOfBirth) != null) {
-        dateOfBirth = _currCustomer.dateOfBirth;
-      }
-      if (_currCustomer.passportDateOfEmit != null &&
-          DateTime.tryParse(_currCustomer.passportDateOfEmit) != null) {
-        passportDateOfEmit = _currCustomer.passportDateOfEmit;
-      }
+      dateOfBirth = _currCustomer.dateOfBirth ?? DateTime.now();
+      passportDateOfEmit = _currCustomer.passportDateOfEmit ?? DateTime.now();
       firstName = _currCustomer.firstName ?? '';
       middleName = _currCustomer.middleName ?? '';
       lastName = _currCustomer.lastName ?? '';

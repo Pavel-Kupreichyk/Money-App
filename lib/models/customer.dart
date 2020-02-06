@@ -4,11 +4,11 @@ class Customer {
   final String firstName;
   final String middleName;
   final String lastName;
-  final String dateOfBirth;
+  final DateTime dateOfBirth;
   final String passportSeries;
   final String passportNum;
   final String passportEmitter;
-  final String passportDateOfEmit;
+  final DateTime passportDateOfEmit;
   final String id;
   final String placeOfBirth;
   final String city;
@@ -54,16 +54,16 @@ class Customer {
     if (snapshot == null) {
       return null;
     }
-
     return Customer(
         firstName: snapshot['firstName'],
         middleName: snapshot['middleName'],
         lastName: snapshot['lastName'],
-        dateOfBirth: snapshot['dateOfBirth'],
+        dateOfBirth: (snapshot['dateOfBirth'] as Timestamp)?.toDate(),
         passportSeries: snapshot['passportSeries'],
         passportNum: snapshot['passportNum'],
         passportEmitter: snapshot['passportEmitter'],
-        passportDateOfEmit: snapshot['passportDateOfEmit'],
+        passportDateOfEmit:
+            (snapshot['passportDateOfEmit'] as Timestamp)?.toDate(),
         id: snapshot['id'],
         placeOfBirth: snapshot['placeOfBirth'],
         city: snapshot['city'],

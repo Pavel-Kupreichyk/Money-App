@@ -20,12 +20,18 @@ class MainPageBody extends StatelessWidget {
               onRefresh: () => _bloc.updateCustomers(),
               child: ListView.separated(
                   itemBuilder: (_, index) {
+                    var formattedDate = customers[index].dateOfBirth != null
+                        ? '${customers[index].dateOfBirth.day}.'
+                            '${customers[index].dateOfBirth.month}.'
+                            '${customers[index].dateOfBirth.year}'
+                        : 'Нет данных';
                     return ListTile(
-                      title: Text(
-                          '${customers[index].lastName} ${customers[index].firstName} ${customers[index].middleName}'),
+                      title: Text('${customers[index].lastName} '
+                          '${customers[index].firstName} '
+                          '${customers[index].middleName}'),
                       subtitle: Text('Город: ${customers[index].city}\n'
                           'Адрес: ${customers[index].address}\n'
-                          'Дата рождения: ${customers[index].dateOfBirth}\n'),
+                          'Дата рождения: $formattedDate\n'),
                       trailing: IconButton(
                         icon: Icon(Icons.edit),
                         color: Colors.blue,

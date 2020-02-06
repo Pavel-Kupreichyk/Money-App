@@ -44,9 +44,9 @@ class EditCustomerPageBody extends StatelessWidget {
                   _bloc.middleName,
                   (val) => _bloc.middleName = val),
               DatePickerField(
-                  initDate: DateTime.parse(_bloc.dateOfBirth),
+                  initDate: _bloc.dateOfBirth,
                   title: '*Дата рождения',
-                  onSaved: (val) => _bloc.dateOfBirth = val.toString()),
+                  onSaved: (val) => _bloc.dateOfBirth = val),
               _buildTitle('Паспортные данные'),
               MaskedTextField(
                 '*Серия паспорта',
@@ -67,9 +67,9 @@ class EditCustomerPageBody extends StatelessWidget {
                   (val) => _bloc.passportNum = val,
                   input: TextInputType.number),
               DatePickerField(
-                  initDate: DateTime.parse(_bloc.passportDateOfEmit),
+                  initDate: _bloc.passportDateOfEmit,
                   title: '*Дата выдачи паспорта',
-                  onSaved: (val) => _bloc.passportDateOfEmit = val.toString()),
+                  onSaved: (val) => _bloc.passportDateOfEmit = val),
               _buildTextInput(
                   '*Орган, выдавший паспорт',
                   'Введите орган, выдавший паспорт',
@@ -256,7 +256,7 @@ class EditCustomerPageBody extends StatelessWidget {
         child: FractionallySizedBox(
           widthFactor: 1,
           child: RaisedButton(
-            child: Text('Добавить'),
+            child: Text(_bloc.btnName),
             onPressed: () async {
               FocusScope.of(context).requestFocus(FocusNode());
               if (_formKey.currentState.validate()) {
