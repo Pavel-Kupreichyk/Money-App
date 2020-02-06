@@ -17,7 +17,9 @@ class MainBloc implements Disposable {
   Stream<List<Customer>> get customers => _customers;
 
   Future updateCustomers() async {
-    _customers.add(await _dbService.fetchCustomers());
+    var customers = await _dbService.fetchCustomers();
+    customers.sort((c1, c2) => c1.combinedName.compareTo(c2.combinedName));
+    _customers.add(customers);
   }
 
   editCustomer(int id) {

@@ -25,6 +25,11 @@ class Customer {
   final bool isPensioner;
   final bool isDutyBound;
 
+  String get combinedName => '$lastName $firstName $middleName';
+  String get formattedBirthDate => dateOfBirth != null
+      ? '${dateOfBirth.day}.${dateOfBirth.month}.${dateOfBirth.year}'
+      : 'Нет данных';
+
   Customer(
       {this.firstName,
       this.middleName,
