@@ -2,6 +2,8 @@ import 'package:money_app/models/customer.dart';
 import 'package:money_app/services/db_service.dart';
 import 'package:money_app/support/disposable.dart';
 
+enum Status { ok, idExists, passportExists }
+
 class EditCustomerBloc implements Disposable {
   String firstName = '';
   String middleName = '';
@@ -64,9 +66,34 @@ class EditCustomerBloc implements Disposable {
     }
   }
 
-  Future<void> addEditCustomer() async {
+  Future<Status> addEditCustomer() async {
     if (_currCustomer != null) {
-      await _dbService.deleteCustomer(id);
+      bool deleteId = false;
+      bool deleteNum = false;
+      if (_currCustomer.id != id) {
+        if (await _dbService.isPassportIdExists(id)) {
+          return Status.idExists;
+        }
+        deleteId = true;
+      }
+      if (_currCustomer.passportSeries + _currCustomer.passportNum !=
+          passportSeries + passportNum) {
+        if (await _dbService.isPassportExists(passportSeries, passportNum)) {
+          return Status.passportExists;
+        }
+        deleteNum = true;
+      }
+      if (deleteId) await _dbService.deleteCustomer(_currCustomer.id);
+      if (deleteNum)
+        await _dbService.deletePassport(
+            _currCustomer.passportSeries, _currCustomer.passportNum);
+    } else {
+      if (await _dbService.isPassportIdExists(id)) {
+        return Status.idExists;
+      }
+      if (await _dbService.isPassportExists(passportSeries, passportNum)) {
+        return Status.passportExists;
+      }
     }
     var newCustomer = Customer(
         firstName: firstName,
@@ -93,6 +120,7 @@ class EditCustomerBloc implements Disposable {
         isPensioner: isPensioner,
         isDutyBound: isDutyBound);
     await _dbService.addCustomer(newCustomer);
+    return Status.ok;
   }
 
   @override

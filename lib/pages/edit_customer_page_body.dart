@@ -26,21 +26,21 @@ class EditCustomerPageBody extends StatelessWidget {
                   '*Фамилия клиента',
                   'Введите фамилию клиента',
                   'Введите корректную фамилию',
-                  r'^[а-яА-Я]+$',
+                  r'^[а-яА-Я-]+$',
                   _bloc.lastName,
                   (val) => _bloc.lastName = val),
               _buildTextInput(
                   '*Имя клиента',
                   'Введите имя клиента',
                   'Введите корректное имя',
-                  r'^[а-яА-Я]+$',
+                  r'^[а-яА-Я-]+$',
                   _bloc.firstName,
                   (val) => _bloc.firstName = val),
               _buildTextInput(
                   '*Отчество клиента',
                   'Введите отчество клиента',
                   'Введите корректное отчетсво',
-                  r'^[а-яА-Я]+$',
+                  r'^[а-яА-Я-]+$',
                   _bloc.middleName,
                   (val) => _bloc.middleName = val),
               DatePickerField(
@@ -70,6 +70,13 @@ class EditCustomerPageBody extends StatelessWidget {
                   initDate: DateTime.parse(_bloc.passportDateOfEmit),
                   title: '*Дата выдачи паспорта',
                   onSaved: (val) => _bloc.passportDateOfEmit = val.toString()),
+              _buildTextInput(
+                  '*Орган, выдавший паспорт',
+                  'Введите орган, выдавший паспорт',
+                  'Введите корректное название',
+                  r'^[а-яА-Я\s\.0-9-]+$',
+                  _bloc.passportEmitter,
+                  (val) => _bloc.passportEmitter = val),
               MaskedTextField(
                 '*Идентификационный номер',
                 'Введите идентификационный номер',
@@ -83,7 +90,7 @@ class EditCustomerPageBody extends StatelessWidget {
                   '*Место рождения',
                   'Введите место рождения',
                   'Введите корректное место рождения',
-                  r'^[а-яА-Я\s\.0-9]+$',
+                  r'^[а-яА-Я\s\.0-9-]+$',
                   _bloc.placeOfBirth,
                   (val) => _bloc.placeOfBirth = val),
               _selectableField(
@@ -95,7 +102,7 @@ class EditCustomerPageBody extends StatelessWidget {
                   '*Адрес фактического проживания',
                   'Введите адрес проживания',
                   'Введите корректный адрес проживания',
-                  r'^[а-яА-Я\s\.0-9]+$',
+                  r'^[а-яА-Я\s\.0-9-]+$',
                   _bloc.address,
                   (val) => _bloc.address = val),
               _buildTitle('Дополнительная информация'),
@@ -132,7 +139,7 @@ class EditCustomerPageBody extends StatelessWidget {
                   'Место работы',
                   'Введите место работы',
                   'Введите корректное место работы',
-                  r'^[а-яА-Яa-zA-Z\s\.]+$',
+                  r'^[а-яА-Яa-zA-Z\s\.-]+$',
                   _bloc.workPlace,
                   (val) => _bloc.workPlace = val,
                   isReq: false),
@@ -254,10 +261,18 @@ class EditCustomerPageBody extends StatelessWidget {
               FocusScope.of(context).requestFocus(FocusNode());
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-                _bloc.addEditCustomer();
-                Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text('Клиент успешно добавлен/изменен.')));
-                navService.pushReplacementWithNavInfo(NavigationInfo.main());
+                var status = await _bloc.addEditCustomer();
+                if (status == Status.ok) {
+                  navService.pushReplacementWithNavInfo(NavigationInfo.main());
+                } else if (status == Status.idExists) {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text('Идентификационный номер уже существует.')));
+                } else {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text('Паспорт с таким номером уже существует.')));
+                }
               } else {
                 Scaffold.of(context).showSnackBar(SnackBar(
                     content: Text('Некоторые поля заполнены некорректно.')));
