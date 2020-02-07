@@ -20,6 +20,24 @@ class EditCustomerPageBuilder extends StatelessWidget {
         builder: (_, bloc, __) => Scaffold(
           appBar: AppBar(
             title: Text('Money App'),
+            actions: <Widget>[
+              StreamBuilder<bool>(
+                stream: bloc.isAdding,
+                builder: (_, snapshot) {
+                  if (snapshot.hasData && snapshot.data) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: Center(
+                          child: SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: CircularProgressIndicator(backgroundColor: Colors.white,))),
+                    );
+                  }
+                  return Container();
+                },
+              )
+            ],
           ),
           body: EditCustomerPageBody(bloc),
           drawer: MainDrawer(

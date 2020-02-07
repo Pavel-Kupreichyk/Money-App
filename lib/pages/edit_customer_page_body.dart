@@ -266,30 +266,41 @@ class EditCustomerPageBody extends StatelessWidget {
       child: Center(
         child: FractionallySizedBox(
           widthFactor: 1,
-          child: RaisedButton(
-            child: Text(_bloc.btnName),
-            onPressed: () async {
-              FocusScope.of(context).requestFocus(FocusNode());
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                var status = await _bloc.addEditCustomer();
-                if (status == Status.ok) {
-                  navService.pushReplacementWithNavInfo(NavigationInfo.main());
-                } else if (status == Status.idExists) {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                      content:
-                          Text('Идентификационный номер уже существует.')));
-                } else {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                      content:
-                          Text('Паспорт с таким номером уже существует.')));
+          child: StreamBuilder<bool>(
+              stream: _bloc.isAdding,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
                 }
-              } else {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text('Некоторые поля заполнены некорректно.')));
-              }
-            },
-          ),
+                return RaisedButton(
+                  child: Text(_bloc.btnName),
+                  onPressed: snapshot.data
+                      ? null
+                      : () async {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                            var status = await _bloc.addEditCustomer();
+                            if (status == Status.ok) {
+                              navService.pushReplacementWithNavInfo(
+                                  NavigationInfo.main());
+                            } else if (status == Status.idExists) {
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      'Идентификационный номер уже существует.')));
+                            } else if (status == Status.passportExists) {
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      'Паспорт с таким номером уже существует.')));
+                            }
+                          } else {
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    'Некоторые поля заполнены некорректно.')));
+                          }
+                        },
+                );
+              }),
         ),
       ),
     );
