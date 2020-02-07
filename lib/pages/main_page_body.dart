@@ -20,15 +20,30 @@ class MainPageBody extends StatelessWidget {
               onRefresh: () => _bloc.updateCustomers(),
               child: ListView.separated(
                   itemBuilder: (_, index) {
-                    return ListTile(
-                      title: Text('${customers[index].combinedName}'),
-                      subtitle: Text('Город: ${customers[index].city}\n'
-                          'Адрес: ${customers[index].address}\n'
-                          'Дата рождения: ${customers[index].formattedBirthDate}\n'),
-                      trailing: IconButton(
-                        icon: Icon(Icons.edit),
-                        color: Colors.blue,
-                        onPressed: () => _bloc.editCustomer(index),
+                    return Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        color: Colors.red,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Icon(Icons.delete_forever, size: 36),
+                          ),
+                        ),
+                      ),
+                      onDismissed: (_) => _bloc.deleteCustomer(index),
+                      child: ListTile(
+                        title: Text('${customers[index].combinedName}'),
+                        subtitle: Text('Город: ${customers[index].city}\n'
+                            'Адрес: ${customers[index].address}\n'
+                            'Дата рождения: ${customers[index].formattedBirthDate}\n'),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit),
+                          color: Colors.blue,
+                          onPressed: () => _bloc.editCustomer(index),
+                        ),
                       ),
                     );
                   },

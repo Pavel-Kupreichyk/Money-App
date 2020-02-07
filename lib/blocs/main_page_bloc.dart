@@ -27,6 +27,14 @@ class MainBloc implements Disposable {
         NavigationInfo.editCustomer(_customers.value[id]));
   }
 
+  deleteCustomer(int id) {
+    var list = _customers.value;
+    var customer = list.removeAt(id);
+    _dbService.deleteCustomer(customer.id);
+    _dbService.deletePassport(customer.passportSeries,customer.passportNum);
+    _customers.add(list);
+  }
+
   @override
   void dispose() {
     _customers.close();

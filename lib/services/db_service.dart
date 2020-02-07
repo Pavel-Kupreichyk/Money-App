@@ -1,15 +1,24 @@
 import 'package:money_app/models/customer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:money_app/models/value_list.dart';
 
 class DbService {
   CollectionReference get customers =>
       Firestore.instance.collection('Customers');
   CollectionReference get passports =>
       Firestore.instance.collection('Passports');
+  CollectionReference get valueLists => Firestore.instance.collection('Lists');
 
   Future<List<Customer>> fetchCustomers() async {
     var snapshot = await customers.getDocuments();
     return snapshot.documents.map((doc) => Customer.fromSnapshot(doc)).toList();
+  }
+
+  Future<List<ValueList>> fetchLists() async {
+    var snapshot = await valueLists.getDocuments();
+    return snapshot.documents
+        .map((doc) => ValueList.fromSnapshot(doc))
+        .toList();
   }
 
   Future<void> deleteCustomer(String id) async {

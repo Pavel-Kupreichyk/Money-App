@@ -1,6 +1,8 @@
 import 'package:money_app/models/customer.dart';
+import 'package:money_app/models/value_list.dart';
 import 'package:money_app/services/db_service.dart';
 import 'package:money_app/support/disposable.dart';
+import 'package:rxdart/rxdart.dart';
 
 enum Status { ok, idExists, passportExists }
 
@@ -31,10 +33,11 @@ class EditCustomerBloc implements Disposable {
 
   final DbService _dbService;
   final Customer _currCustomer;
-
+  final BehaviorSubject<List<ValueList>> _valueLists = BehaviorSubject();
   String get btnName => _currCustomer == null ? 'Добавить' : 'Изменить';
 
   EditCustomerBloc(this._dbService, [this._currCustomer]) {
+    _dbService.fetchLists().then((lists) => _valueLists.add(lists));
     if (_currCustomer != null) {
       dateOfBirth = _currCustomer.dateOfBirth ?? DateTime.now();
       passportDateOfEmit = _currCustomer.passportDateOfEmit ?? DateTime.now();
@@ -61,6 +64,8 @@ class EditCustomerBloc implements Disposable {
       isDutyBound = _currCustomer.isDutyBound ?? false;
     }
   }
+
+  Stream<List<ValueList>> get valueLists => _valueLists;
 
   Future<Status> addEditCustomer() async {
     if (_currCustomer != null) {
@@ -120,5 +125,7 @@ class EditCustomerBloc implements Disposable {
   }
 
   @override
-  void dispose() {}
+  void dispose() {
+    _valueLists.close();
+  }
 }
