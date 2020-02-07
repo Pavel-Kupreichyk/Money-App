@@ -17,12 +17,22 @@ class MainBloc implements Disposable {
   Stream<List<Customer>> get customers => _customers;
 
   Future updateCustomers() async {
-    _customers.add(await _dbService.fetchCustomers());
+    var customers = await _dbService.fetchCustomers();
+    customers.sort((c1, c2) => c1.combinedName.compareTo(c2.combinedName));
+    _customers.add(customers);
   }
 
   editCustomer(int id) {
     _navigationService.pushReplacementWithNavInfo(
         NavigationInfo.editCustomer(_customers.value[id]));
+  }
+
+  deleteCustomer(int id) {
+    var list = _customers.value;
+    var customer = list.removeAt(id);
+    _dbService.deleteCustomer(customer.id);
+    _dbService.deletePassport(customer.passportSeries,customer.passportNum);
+    _customers.add(list);
   }
 
   @override

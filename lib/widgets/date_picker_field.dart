@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DatePickerField extends StatefulWidget {
-  final String Function(DateTime) validator;
-  final String Function(DateTime) onSaved;
+  final Function(DateTime) validator;
+  final Function(DateTime) onSaved;
   final DateTime initDate;
   final String title;
 

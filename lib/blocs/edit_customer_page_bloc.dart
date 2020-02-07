@@ -1,18 +1,20 @@
 import 'package:money_app/models/customer.dart';
+import 'package:money_app/models/value_list.dart';
 import 'package:money_app/services/db_service.dart';
 import 'package:money_app/support/disposable.dart';
+import 'package:rxdart/rxdart.dart';
 
-enum Status { ok, idExists, passportExists }
+enum Status { ok, idExists, passportExists, alreadyAdding }
 
 class EditCustomerBloc implements Disposable {
   String firstName = '';
   String middleName = '';
   String lastName = '';
-  String dateOfBirth = DateTime.now().toString();
+  DateTime dateOfBirth = DateTime.now();
   String passportSeries = '';
   String passportNum = '';
   String passportEmitter = '';
-  String passportDateOfEmit = DateTime.now().toString();
+  DateTime passportDateOfEmit = DateTime.now();
   String id = '';
   String placeOfBirth = '';
   String city = 'Минск';
@@ -31,17 +33,15 @@ class EditCustomerBloc implements Disposable {
 
   final DbService _dbService;
   final Customer _currCustomer;
+  final BehaviorSubject<List<ValueList>> _valueLists = BehaviorSubject();
+  final BehaviorSubject<bool> _isAdding = BehaviorSubject.seeded(false);
+  String get btnName => _currCustomer == null ? 'Добавить' : 'Изменить';
 
   EditCustomerBloc(this._dbService, [this._currCustomer]) {
+    _dbService.fetchLists().then((lists) => _valueLists.add(lists));
     if (_currCustomer != null) {
-      if (_currCustomer.dateOfBirth != null &&
-          DateTime.tryParse(_currCustomer.dateOfBirth) != null) {
-        dateOfBirth = _currCustomer.dateOfBirth;
-      }
-      if (_currCustomer.passportDateOfEmit != null &&
-          DateTime.tryParse(_currCustomer.passportDateOfEmit) != null) {
-        passportDateOfEmit = _currCustomer.passportDateOfEmit;
-      }
+      dateOfBirth = _currCustomer.dateOfBirth ?? DateTime.now();
+      passportDateOfEmit = _currCustomer.passportDateOfEmit ?? DateTime.now();
       firstName = _currCustomer.firstName ?? '';
       middleName = _currCustomer.middleName ?? '';
       lastName = _currCustomer.lastName ?? '';
@@ -66,7 +66,46 @@ class EditCustomerBloc implements Disposable {
     }
   }
 
+  Stream<List<ValueList>> get valueLists => _valueLists;
+  Stream<bool> get isAdding => _isAdding;
+
   Future<Status> addEditCustomer() async {
+    if(_isAdding.value) return Status.alreadyAdding;
+
+    _isAdding.add(true);
+    Status status = await _prepareDB();
+    if (status == Status.ok) {
+      var newCustomer = Customer(
+          firstName: firstName,
+          middleName: middleName,
+          lastName: lastName,
+          dateOfBirth: dateOfBirth,
+          passportSeries: passportSeries,
+          passportNum: passportNum,
+          passportEmitter: passportEmitter,
+          passportDateOfEmit: passportDateOfEmit,
+          id: id,
+          placeOfBirth: placeOfBirth,
+          city: city,
+          address: address,
+          mobilePhoneNumber: mobilePhoneNumber,
+          homePhoneNumber: homePhoneNumber,
+          email: email,
+          workPlace: workPlace,
+          workPosition: workPosition,
+          familyStatus: familyStatus,
+          citizenship: citizenship,
+          disabilityStatus: disabilityStatus,
+          monthlyIncome: monthlyIncome,
+          isPensioner: isPensioner,
+          isDutyBound: isDutyBound);
+      await _dbService.addCustomer(newCustomer);
+    }
+    _isAdding.add(false);
+    return status;
+  }
+
+  Future<Status> _prepareDB() async {
     if (_currCustomer != null) {
       bool deleteId = false;
       bool deleteNum = false;
@@ -95,34 +134,12 @@ class EditCustomerBloc implements Disposable {
         return Status.passportExists;
       }
     }
-    var newCustomer = Customer(
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName,
-        dateOfBirth: dateOfBirth,
-        passportSeries: passportSeries,
-        passportNum: passportNum,
-        passportEmitter: passportEmitter,
-        passportDateOfEmit: passportDateOfEmit,
-        id: id,
-        placeOfBirth: placeOfBirth,
-        city: city,
-        address: address,
-        mobilePhoneNumber: mobilePhoneNumber,
-        homePhoneNumber: homePhoneNumber,
-        email: email,
-        workPlace: workPlace,
-        workPosition: workPosition,
-        familyStatus: familyStatus,
-        citizenship: citizenship,
-        disabilityStatus: disabilityStatus,
-        monthlyIncome: monthlyIncome,
-        isPensioner: isPensioner,
-        isDutyBound: isDutyBound);
-    await _dbService.addCustomer(newCustomer);
     return Status.ok;
   }
 
   @override
-  void dispose() {}
+  void dispose() {
+    _isAdding.close();
+    _valueLists.close();
+  }
 }
