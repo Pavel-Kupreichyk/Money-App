@@ -1,5 +1,6 @@
 import 'package:money_app/models/customer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:money_app/models/program.dart';
 import 'package:money_app/models/value_list.dart';
 
 class DbService {
@@ -8,10 +9,16 @@ class DbService {
   CollectionReference get passports =>
       Firestore.instance.collection('Passports');
   CollectionReference get valueLists => Firestore.instance.collection('Lists');
+  CollectionReference get programs => Firestore.instance.collection('Programs');
 
   Future<List<Customer>> fetchCustomers() async {
     var snapshot = await customers.getDocuments();
     return snapshot.documents.map((doc) => Customer.fromSnapshot(doc)).toList();
+  }
+
+  Future<List<Program>> fetchPrograms() async {
+    var snapshot = await programs.getDocuments();
+    return snapshot.documents.map((doc) => Program.fromSnapshot(doc)).toList();
   }
 
   Future<List<ValueList>> fetchLists() async {

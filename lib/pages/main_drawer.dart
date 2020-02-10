@@ -38,13 +38,16 @@ class MainDrawer extends StatelessWidget {
               title: Text('Управление Клиентами'),
               leading: Icon(Icons.group),
               onTap: () => ignoredButton != MainDrawerButtonType.showGroup
-                  ? navService
-                      .pushReplacementWithNavInfo(NavigationInfo.main())
+                  ? navService.pushReplacementWithNavInfo(NavigationInfo.main())
                   : navService.pop(),
             ),
             ListTile(
               title: Text('Открыть Депозит'),
               leading: Icon(Icons.monetization_on),
+              onTap: () => ignoredButton != MainDrawerButtonType.deposit
+                  ? navService.pushReplacementWithNavInfo(
+                      NavigationInfo.createDeposit())
+                  : navService.pop(),
             ),
             ListTile(
               title: Text('Открыть Кредит'),
