@@ -36,11 +36,22 @@ class DepositPageBody extends StatelessWidget {
                       children: <Widget>[
                         Flexible(
                           flex: 2,
-                          child: SelectableField(
-                            label: 'Валюта',
-                            values: values.currencies,
-                            initVal: values.currency,
-                            onChanged: (val) => _bloc.selectCurrency(val),
+                          child: Column(
+                            children: <Widget>[
+                              SelectableField(
+                                label: 'Валюта',
+                                values: values.currencies,
+                                initVal: values.currency,
+                                onChanged: (val) => _bloc.selectCurrency(val),
+                              ),
+                              if (values.program.time.isNotEmpty)
+                                SelectableField(
+                                  label: 'Месячный срок',
+                                  values: values.times,
+                                  initVal: values.time.toString(),
+                                  onChanged: _bloc.selectTime,
+                                ),
+                            ],
                           ),
                         ),
                         Padding(
@@ -73,6 +84,23 @@ class DepositPageBody extends StatelessWidget {
                                     '${values.percent}%',
                                     style: TextStyle(fontSize: 16),
                                   ),
+                                  if (values.program.time.isNotEmpty)
+                                    Column(
+                                      children: <Widget>[
+                                        SizedBox(height: 10),
+                                        Text(
+                                          'Истечёт',
+                                          style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 12),
+                                        ),
+                                        SizedBox(height: 2),
+                                        Text(
+                                          values.dateOfExpire,
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
                                 ],
                               ),
                             ),
@@ -80,13 +108,13 @@ class DepositPageBody extends StatelessWidget {
                         ),
                       ],
                     ),
-                    if (values.program.time.isNotEmpty)
-                      SelectableField(
-                        label: 'Месячный срок',
-                        values: values.times,
-                        initVal: values.time.toString(),
-                        onChanged: _bloc.selectTime,
-                      ),
+                    SelectableField(
+                      label: 'Клиент',
+                      values: values.customerNames,
+                      initVal: values.customerName,
+                      onChanged: _bloc.selectCustomer,
+                    ),
+                    Text(values.code),
                   ],
                 ),
               ),
