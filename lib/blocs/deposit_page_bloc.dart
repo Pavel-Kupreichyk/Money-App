@@ -129,7 +129,7 @@ class DepositBloc implements Disposable {
         number: mainNumber,
         owner: _values.value.customer.id,
         type: 'Пассив',
-        percent: _values.value.percent,
+        percent: _values.value.percent * 0.01,
         percentBill: percentNumber,
         month: _values.value.time,
         isOpen: true);

@@ -14,6 +14,10 @@ class NavigationInfo {
       : route = RouteGenerator.createDepositRoute,
         args = null;
 
+  NavigationInfo.bills()
+      : route = RouteGenerator.billsPageRoute,
+        args = null;
+
   NavigationInfo.addCustomer()
       : route = RouteGenerator.addCustomerRoute,
         args = null;
