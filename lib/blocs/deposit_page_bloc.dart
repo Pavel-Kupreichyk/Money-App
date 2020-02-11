@@ -2,6 +2,7 @@ import 'package:money_app/models/bill.dart';
 import 'package:money_app/models/customer.dart';
 import 'package:money_app/models/program.dart';
 import 'package:money_app/services/db_service.dart';
+import 'package:money_app/support/courses.dart';
 import 'package:money_app/support/disposable.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -66,6 +67,8 @@ class DepositValues {
     currency = program.percents.keys.first;
     if (program.time.isNotEmpty) {
       time = program.time.first;
+    } else {
+      time = -1;
     }
   }
 
@@ -123,8 +126,8 @@ class DepositBloc implements Disposable {
     var percentNumber = _values.value.percentCode;
 
     var bill = Bill(
-        amount: depositSum,
-        actualAmount: depositSum,
+        amount: double.parse(depositSum),
+        actualAmount: 0,
         currency: _values.value.currency,
         number: mainNumber,
         owner: _values.value.customer.id,
@@ -135,8 +138,8 @@ class DepositBloc implements Disposable {
         isOpen: true);
 
     var percentBill = Bill(
-        amount: '0',
-        actualAmount: '0',
+        amount: 0,
+        actualAmount: 0,
         currency: _values.value.currency,
         number: percentNumber,
         owner: _values.value.customer.id,
@@ -145,6 +148,24 @@ class DepositBloc implements Disposable {
         percentBill: '',
         month: _values.value.time,
         isOpen: true);
+
+    double convertedVal;
+    switch (_values.value.currency) {
+      case 'USD':
+        convertedVal = double.parse(depositSum) * Courses.usd_byn;
+        break;
+      case 'RUB':
+        convertedVal = double.parse(depositSum) * Courses.rub_byn;
+        break;
+      case 'EUR':
+        convertedVal = double.parse(depositSum) * Courses.eur_byn;
+        break;
+      default:
+        convertedVal = double.parse(depositSum);
+        break;
+    }
+
+    await _dbService.changeBillAmount(Courses.main, convertedVal);
 
     await _dbService.addBill(bill);
     await _dbService.addBill(percentBill);

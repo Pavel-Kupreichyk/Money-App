@@ -72,6 +72,12 @@ class DbService {
     await bills.document(number).updateData({'isOpen': false});
   }
 
+  Future<void> changeBillAmount(String number, double value) async {
+    await bills
+        .document(number)
+        .updateData({'actualAmount': FieldValue.increment(value)});
+  }
+
   Future<void> incrementBillCount(String id, int val) async => await customers
       .document(id)
       .updateData({'billCount': FieldValue.increment(val)});

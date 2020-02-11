@@ -114,8 +114,11 @@ class EditCustomerPageBody extends StatelessWidget {
                         r'^[а-яА-Я\s\.0-9-]+$',
                         _bloc.placeOfBirth,
                         (val) => _bloc.placeOfBirth = val),
-                    _selectableField('*Город фактического проживания', city,
-                        _bloc.city, (val) => _bloc.city = val),
+                    SelectableField(
+                        label: '*Город фактического проживания',
+                        values: city,
+                        initVal: _bloc.city,
+                        onChanged: (val) => _bloc.city = val),
                     TextInput(
                         '*Адрес фактического проживания',
                         'Введите адрес проживания',
@@ -183,23 +186,26 @@ class EditCustomerPageBody extends StatelessWidget {
                         values: familyStatus,
                         initVal: _bloc.familyStatus,
                         onChanged: (val) => _bloc.familyStatus = val),
-                    _selectableField('*Гражданство', citizenship,
-                        _bloc.citizenship, (val) => _bloc.citizenship = val),
-                    _selectableField(
-                        '*Инвалидность',
-                        disabilityStatus,
-                        _bloc.disabilityStatus,
-                        (val) => _bloc.disabilityStatus = val),
-                    _selectableField(
-                        '*Пенсионер',
-                        ['Нет', 'Да'],
-                        _bloc.isPensioner ? 'Да' : 'Нет',
-                        (val) => _bloc.isPensioner = val == 'Да'),
-                    _selectableField(
-                        '*Военнообязанный',
-                        ['Нет', 'Да'],
-                        _bloc.isDutyBound ? 'Да' : 'Нет',
-                        (val) => _bloc.isDutyBound = val == 'Да'),
+                    SelectableField(
+                        label: '*Гражданство',
+                        values: citizenship,
+                        initVal: _bloc.citizenship,
+                        onChanged: (val) => _bloc.citizenship = val),
+                    SelectableField(
+                        label: '*Инвалидность',
+                        values: disabilityStatus,
+                        initVal: _bloc.disabilityStatus,
+                        onChanged: (val) => _bloc.disabilityStatus = val),
+                    SelectableField(
+                        label: '*Пенсионер',
+                        values: ['Нет', 'Да'],
+                        initVal: _bloc.isPensioner ? 'Да' : 'Нет',
+                        onChanged: (val) => _bloc.isPensioner = val == 'Да'),
+                    SelectableField(
+                        label: '*Военнообязанный',
+                        values: ['Нет', 'Да'],
+                        initVal: _bloc.isDutyBound ? 'Да' : 'Нет',
+                        onChanged: (val) => _bloc.isDutyBound = val == 'Да'),
                     _submitButton(context),
                   ],
                 ),
@@ -214,28 +220,6 @@ class EditCustomerPageBody extends StatelessWidget {
       padding: const EdgeInsets.only(top: 24.0),
       child: Text(text,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-    );
-  }
-
-  Widget _selectableField(String label, List<String> values, String value,
-      Function(String) onChanged) {
-    return StatefulBuilder(
-      builder: (_, setState) {
-        return DropdownButtonFormField<String>(
-          decoration: InputDecoration(
-            labelText: label,
-          ),
-          items: values
-              .map((val) =>
-                  DropdownMenuItem<String>(value: val, child: Text(val)))
-              .toList(),
-          onChanged: (val) {
-            onChanged(val);
-            setState(() => value = val);
-          },
-          value: value,
-        );
-      },
     );
   }
 

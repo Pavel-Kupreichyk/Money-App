@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Bill {
-  final String amount;
-  final String actualAmount;
+  final double amount;
+  final double actualAmount;
   final String currency;
   final String number;
   final String owner;
@@ -29,8 +29,8 @@ class Bill {
       return null;
     }
     return Bill(
-      amount: snapshot['amount'],
-      actualAmount: snapshot['actualAmount'],
+      amount: snapshot['amount'].toDouble(),
+      actualAmount: snapshot['actualAmount'].toDouble(),
       currency: snapshot['currency'],
       number: snapshot['number'],
       owner: snapshot['owner'],
