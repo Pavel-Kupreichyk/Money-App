@@ -146,35 +146,10 @@ class DepositBloc implements Disposable {
         month: _values.value.time,
         isOpen: true);
 
-    var newCustomer = Customer(
-        firstName: _values.value.customer.firstName,
-        middleName: _values.value.customer.middleName,
-        lastName: _values.value.customer.lastName,
-        dateOfBirth: _values.value.customer.dateOfBirth,
-        passportSeries: _values.value.customer.passportSeries,
-        passportNum: _values.value.customer.passportNum,
-        passportEmitter: _values.value.customer.passportEmitter,
-        passportDateOfEmit: _values.value.customer.passportDateOfEmit,
-        id: _values.value.customer.id,
-        placeOfBirth: _values.value.customer.placeOfBirth,
-        city: _values.value.customer.city,
-        address: _values.value.customer.address,
-        mobilePhoneNumber: _values.value.customer.mobilePhoneNumber,
-        homePhoneNumber: _values.value.customer.homePhoneNumber,
-        email: _values.value.customer.email,
-        workPlace: _values.value.customer.workPlace,
-        workPosition: _values.value.customer.workPosition,
-        familyStatus: _values.value.customer.familyStatus,
-        citizenship: _values.value.customer.citizenship,
-        disabilityStatus: _values.value.customer.disabilityStatus,
-        monthlyIncome: _values.value.customer.monthlyIncome,
-        isPensioner: _values.value.customer.isPensioner,
-        isDutyBound: _values.value.customer.isDutyBound,
-        billCount: _values.value.customer.billCount + 2);
-
     await _dbService.addBill(bill);
     await _dbService.addBill(percentBill);
-    await _dbService.addCustomer(newCustomer);
+    await _dbService.incrementBillCount(_values.value.customer.id, 2);
+
     _isAdding.add(false);
   }
 

@@ -68,6 +68,10 @@ class DbService {
     });
   }
 
+  Future<void> incrementBillCount(String id, int val) async => await customers
+      .document(id)
+      .updateData({'billCount': FieldValue.increment(val)});
+
   Future<void> addCustomer(Customer customer) async {
     await customers.document(customer.id).setData({
       'firstName': customer.firstName,

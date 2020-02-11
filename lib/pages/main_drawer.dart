@@ -50,8 +50,8 @@ class MainDrawer extends StatelessWidget {
                   : navService.pop(),
             ),
             ListTile(
-              title: Text('Открыть Кредит'),
-              leading: Icon(Icons.attach_money),
+              title: Text('Закрытие банковского дня'),
+              leading: Icon(Icons.access_time),
             ),
           ],
         ),
