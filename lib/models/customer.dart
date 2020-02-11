@@ -22,6 +22,7 @@ class Customer {
   final String citizenship;
   final String disabilityStatus;
   final String monthlyIncome;
+  final int billCount;
   final bool isPensioner;
   final bool isDutyBound;
 
@@ -53,7 +54,8 @@ class Customer {
       this.disabilityStatus,
       this.monthlyIncome,
       this.isPensioner,
-      this.isDutyBound});
+      this.isDutyBound,
+      this.billCount});
 
   factory Customer.fromSnapshot(DocumentSnapshot snapshot) {
     if (snapshot == null) {
@@ -83,6 +85,7 @@ class Customer {
         disabilityStatus: snapshot['disabilityStatus'],
         monthlyIncome: snapshot['monthlyIncome'],
         isPensioner: snapshot['isPensioner'],
-        isDutyBound: snapshot['isDutyBound']);
+        isDutyBound: snapshot['isDutyBound'],
+        billCount: snapshot['billCount']);
   }
 }

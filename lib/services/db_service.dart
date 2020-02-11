@@ -1,3 +1,4 @@
+import 'package:money_app/models/bill.dart';
 import 'package:money_app/models/customer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:money_app/models/program.dart';
@@ -10,6 +11,7 @@ class DbService {
       Firestore.instance.collection('Passports');
   CollectionReference get valueLists => Firestore.instance.collection('Lists');
   CollectionReference get programs => Firestore.instance.collection('Programs');
+  CollectionReference get bills => Firestore.instance.collection('Bills');
 
   Future<List<Customer>> fetchCustomers() async {
     var snapshot = await customers.getDocuments();
@@ -19,6 +21,11 @@ class DbService {
   Future<List<Program>> fetchPrograms() async {
     var snapshot = await programs.getDocuments();
     return snapshot.documents.map((doc) => Program.fromSnapshot(doc)).toList();
+  }
+
+  Future<List<Bill>> fetchBills() async {
+    var snapshot = await bills.getDocuments();
+    return snapshot.documents.map((doc) => Bill.fromSnapshot(doc)).toList();
   }
 
   Future<List<ValueList>> fetchLists() async {
@@ -46,6 +53,21 @@ class DbService {
     return doc.exists;
   }
 
+  Future<void> addBill(Bill bill) async {
+    await bills.document(bill.number).setData({
+      'amount': bill.amount,
+      'actualAmount': bill.actualAmount,
+      'currency': bill.currency,
+      'number': bill.number,
+      'owner': bill.owner,
+      'type': bill.type,
+      'percent': bill.percent,
+      'percentBill': bill.percentBill,
+      'isOpen': bill.isOpen,
+      'month': bill.month,
+    });
+  }
+
   Future<void> addCustomer(Customer customer) async {
     await customers.document(customer.id).setData({
       'firstName': customer.firstName,
@@ -70,7 +92,8 @@ class DbService {
       'disabilityStatus': customer.disabilityStatus,
       'monthlyIncome': customer.monthlyIncome,
       'isPensioner': customer.isPensioner,
-      'isDutyBound': customer.isDutyBound
+      'isDutyBound': customer.isDutyBound,
+      'billCount': customer.billCount,
     });
 
     await passports

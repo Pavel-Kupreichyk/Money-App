@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:money_app/blocs/deposit_page_bloc.dart';
+import 'package:money_app/services/navigation_service.dart';
+import 'package:money_app/support/navigation_info.dart';
 import 'package:money_app/widgets/selectable_field.dart';
+import 'package:money_app/widgets/text_input.dart';
+import 'package:provider/provider.dart';
 
 class DepositPageBody extends StatelessWidget {
   final DepositBloc _bloc;
@@ -28,7 +32,7 @@ class DepositPageBody extends StatelessWidget {
                     SelectableField(
                       label: 'Сберегательная программа',
                       values: values.programNames,
-                      initVal: values.program.name,
+                      initVal: '${values.program.name} (${values.program.id})',
                       onChanged: (val) => _bloc.selectProgram(val),
                     ),
                     Row(
@@ -84,6 +88,17 @@ class DepositPageBody extends StatelessWidget {
                                     '${values.percent}%',
                                     style: TextStyle(fontSize: 16),
                                   ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'Начало',
+                                    style: TextStyle(
+                                        color: Colors.grey[600], fontSize: 12),
+                                  ),
+                                  SizedBox(height: 2),
+                                  Text(
+                                    values.currDate,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                   if (values.program.time.isNotEmpty)
                                     Column(
                                       children: <Widget>[
@@ -114,12 +129,65 @@ class DepositPageBody extends StatelessWidget {
                       initVal: values.customerName,
                       onChanged: _bloc.selectCustomer,
                     ),
-                    Text(values.code),
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      initialValue: _bloc.depositSum,
+                      onSaved: (val) => _bloc.depositSum = val,
+                      decoration: InputDecoration(
+                        labelText: 'Сумма депозита'
+                      ),
+                      validator: (value) {
+                        var val = int.tryParse(value);
+                        if (val == null) {
+                          return 'Введите сумму депозита';
+                        } else if (val <= 0) {
+                          return 'Введите корректное значение';
+                        }
+                        return null;
+                      },
+                    ),
+                    _submitButton(context),
                   ],
                 ),
               ),
             );
           }),
+    );
+  }
+
+  Widget _submitButton(BuildContext context) {
+    var navService = Provider.of<NavigationService>(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Center(
+        child: FractionallySizedBox(
+          widthFactor: 1,
+          child: StreamBuilder<bool>(
+              stream: _bloc.isAdding,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+                return RaisedButton(
+                  child: Text('Открыть депозит'),
+                  onPressed: snapshot.data
+                      ? null
+                      : () async {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                            var status = await _bloc.openDeposit();
+                            navService.pushReplacementWithNavInfo(
+                                NavigationInfo.main());
+                          } else {
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text('Введите сумму депозита.')));
+                          }
+                        },
+                );
+              }),
+        ),
+      ),
     );
   }
 }
