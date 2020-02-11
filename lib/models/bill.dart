@@ -35,7 +35,7 @@ class Bill {
       number: snapshot['number'],
       owner: snapshot['owner'],
       type: snapshot['type'],
-      percent: snapshot['percent'],
+      percent: snapshot['percent'].toDouble(),
       percentBill: snapshot['percentBill'],
       isOpen: snapshot['isOpen'],
       month: snapshot['month'],

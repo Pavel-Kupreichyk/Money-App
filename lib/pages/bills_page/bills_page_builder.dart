@@ -14,7 +14,22 @@ class BillsPageBuilder extends StatelessWidget {
       child: Consumer<BillsBloc>(
         builder: (_, bloc, __) => Scaffold(
           appBar: AppBar(
-            title: Text(''),
+            title: Text('Money App'),
+            actions: <Widget>[
+              StreamBuilder<bool>(
+                  stream: bloc.isLoading,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Container();
+                    }
+
+                    return IconButton(
+                      icon: Icon(Icons.access_time),
+                      color: Colors.white,
+                      onPressed: snapshot.data ? null : bloc.closeDay,
+                    );
+                  })
+            ],
           ),
           body: BillsPageBody(bloc),
           drawer: MainDrawer(

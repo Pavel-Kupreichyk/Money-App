@@ -68,6 +68,10 @@ class DbService {
     });
   }
 
+  Future<void> closeBill(String number) async {
+    await bills.document(number).updateData({'isOpen': false});
+  }
+
   Future<void> incrementBillCount(String id, int val) async => await customers
       .document(id)
       .updateData({'billCount': FieldValue.increment(val)});
