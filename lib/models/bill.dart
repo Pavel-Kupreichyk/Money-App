@@ -7,8 +7,7 @@ class Bill {
   final String number;
   final String owner;
   final String type;
-  final String percentBill;
-  final double percent;
+  final PercentBill percentBill;
   final int month;
   final bool isOpen;
 
@@ -19,7 +18,6 @@ class Bill {
       this.number,
       this.owner,
       this.type,
-      this.percent,
       this.percentBill,
       this.isOpen,
       this.month});
@@ -35,10 +33,21 @@ class Bill {
       number: snapshot['number'],
       owner: snapshot['owner'],
       type: snapshot['type'],
-      percent: snapshot['percent'].toDouble(),
-      percentBill: snapshot['percentBill'],
+      percentBill: snapshot['percentBill'] != null
+          ? PercentBill(
+              amount: snapshot['percentBill']['amount'].toDouble(),
+              number: snapshot['percentBill']['number'],
+              percent: snapshot['percentBill']['percent'].toDouble())
+          : null,
       isOpen: snapshot['isOpen'],
       month: snapshot['month'],
     );
   }
+}
+
+class PercentBill {
+  final double amount;
+  final String number;
+  final double percent;
+  PercentBill({this.amount, this.number, this.percent});
 }

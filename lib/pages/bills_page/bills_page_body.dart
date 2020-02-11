@@ -37,9 +37,12 @@ class BillsPageBody extends StatelessWidget {
                     child: ListView.separated(
                         itemBuilder: (_, index) {
                           return ListTile(
-                            title: Text('${bills[index].number}'),
+                            title:
+                                Text('Основной счёт: ${bills[index].number}'),
                             subtitle: Text(
-                                'Сумма: ${bills[index].actualAmount} ${bills[index].currency}\n'
+                                'Процентный счёт: ${bills[index].percentBill.number}\n'
+                                'Сумма вклада: ${bills[index].amount} ${bills[index].currency}\n'
+                                'Сумма процентов: ${bills[index].percentBill.amount} ${bills[index].currency}\n'
                                 'Месяцев до завершения: ${bills[index].month >= 0 ? bills[index].month : '-'}'),
                             trailing: bills[index].isOpen
                                 ? IconButton(

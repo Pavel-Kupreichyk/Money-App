@@ -122,30 +122,18 @@ class DepositBloc implements Disposable {
 
   openDeposit() async {
     _isAdding.add(true);
-    var mainNumber = _values.value.billCode;
-    var percentNumber = _values.value.percentCode;
 
     var bill = Bill(
         amount: double.parse(depositSum),
         actualAmount: 0,
         currency: _values.value.currency,
-        number: mainNumber,
+        number: _values.value.billCode,
         owner: _values.value.customer.id,
         type: 'Пассив',
-        percent: _values.value.percent * 0.01,
-        percentBill: percentNumber,
-        month: _values.value.time,
-        isOpen: true);
-
-    var percentBill = Bill(
-        amount: 0,
-        actualAmount: 0,
-        currency: _values.value.currency,
-        number: percentNumber,
-        owner: _values.value.customer.id,
-        type: 'Пассив',
-        percent: 0,
-        percentBill: '',
+        percentBill: PercentBill(
+            amount: 0,
+            number: _values.value.percentCode,
+            percent: _values.value.percent * 0.01),
         month: _values.value.time,
         isOpen: true);
 
@@ -164,11 +152,8 @@ class DepositBloc implements Disposable {
         convertedVal = double.parse(depositSum);
         break;
     }
-
-    await _dbService.changeBillAmount(Courses.main, convertedVal);
-
     await _dbService.addBill(bill);
-    await _dbService.addBill(percentBill);
+    await _dbService.changeBillAmount(Courses.main, convertedVal);
     await _dbService.incrementBillCount(_values.value.customer.id, 2);
 
     _isAdding.add(false);

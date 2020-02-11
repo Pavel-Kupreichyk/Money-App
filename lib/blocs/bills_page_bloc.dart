@@ -41,7 +41,10 @@ class BillsBloc implements Disposable {
     }
 
     _isLoading.add(true);
-
+    var main = _bills.value.firstWhere((b) => b.owner == 'СФРБ');
+    var cash = _bills.value.firstWhere((b) => b.owner == 'Касса');
+    var bills = _bills.value.where((b) => b != main && b != cash).toList();
+    _dbService.changePercentBillAmount(bills[0], -333);
     _isLoading.add(false);
   }
 

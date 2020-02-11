@@ -61,8 +61,11 @@ class DbService {
       'number': bill.number,
       'owner': bill.owner,
       'type': bill.type,
-      'percent': bill.percent,
-      'percentBill': bill.percentBill,
+      'percentBill': {
+        'amount': bill.percentBill.amount,
+        'number': bill.percentBill.number,
+        'percent': bill.percentBill.percent
+      },
       'isOpen': bill.isOpen,
       'month': bill.month,
     });
@@ -76,6 +79,16 @@ class DbService {
     await bills
         .document(number)
         .updateData({'actualAmount': FieldValue.increment(value)});
+  }
+
+  Future<void> changePercentBillAmount(Bill bill, double value) async {
+    await bills.document(bill.number).updateData({
+      'percentBill': {
+        'amount': bill.percentBill.amount + value,
+        'percent': bill.percentBill.percent,
+        'number': bill.percentBill.number
+      }
+    });
   }
 
   Future<void> incrementBillCount(String id, int val) async => await customers
