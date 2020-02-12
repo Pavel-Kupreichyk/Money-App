@@ -30,8 +30,10 @@ class MainBloc implements Disposable {
   deleteCustomer(int id) {
     var list = _customers.value;
     var customer = list.removeAt(id);
-    _dbService.deleteCustomer(customer.id);
-    _dbService.deletePassport(customer.passportSeries,customer.passportNum);
+    if (customer.billCount == 0) {
+      _dbService.deleteCustomer(customer.id);
+      _dbService.deletePassport(customer.passportSeries, customer.passportNum);
+    }
     _customers.add(list);
   }
 

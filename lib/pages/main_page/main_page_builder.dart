@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_app/blocs/main_page_bloc.dart';
 import 'package:money_app/pages/main_drawer.dart';
-import 'package:money_app/pages/main_page_body.dart';
+import 'package:money_app/pages/main_page/main_page_body.dart';
 import 'package:money_app/services/db_service.dart';
 import 'package:money_app/services/navigation_service.dart';
 import 'package:provider/provider.dart';

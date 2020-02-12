@@ -5,6 +5,8 @@ import 'package:money_app/services/navigation_service.dart';
 import 'package:money_app/support/navigation_info.dart';
 import 'package:money_app/widgets/date_picker_field.dart';
 import 'package:money_app/widgets/masked_text_field.dart';
+import 'package:money_app/widgets/selectable_field.dart';
+import 'package:money_app/widgets/text_input.dart';
 import 'package:provider/provider.dart';
 
 class EditCustomerPageBody extends StatelessWidget {
@@ -21,15 +23,15 @@ class EditCustomerPageBody extends StatelessWidget {
             if (!snapshot.hasData) {
               return Center(child: CircularProgressIndicator());
             }
-            List<String> city =
+            var city =
                 snapshot.data.firstWhere((data) => data.name == 'City').values;
-            List<String> familyStatus = snapshot.data
+            var familyStatus = snapshot.data
                 .firstWhere((data) => data.name == 'FamilyStatus')
                 .values;
-            List<String> citizenship = snapshot.data
+            var citizenship = snapshot.data
                 .firstWhere((data) => data.name == 'Citizenship')
                 .values;
-            List<String> disabilityStatus = snapshot.data
+            var disabilityStatus = snapshot.data
                 .firstWhere((data) => data.name == 'DisabilityStatus')
                 .values;
 
@@ -41,21 +43,21 @@ class EditCustomerPageBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     _buildTitle('Основная информация'),
-                    _buildTextInput(
+                    TextInput(
                         '*Фамилия клиента',
                         'Введите фамилию клиента',
                         'Введите корректную фамилию',
                         r'^[а-яА-Я-]+$',
                         _bloc.lastName,
                         (val) => _bloc.lastName = val),
-                    _buildTextInput(
+                    TextInput(
                         '*Имя клиента',
                         'Введите имя клиента',
                         'Введите корректное имя',
                         r'^[а-яА-Я-]+$',
                         _bloc.firstName,
                         (val) => _bloc.firstName = val),
-                    _buildTextInput(
+                    TextInput(
                         '*Отчество клиента',
                         'Введите отчество клиента',
                         'Введите корректное отчетсво',
@@ -89,7 +91,7 @@ class EditCustomerPageBody extends StatelessWidget {
                         initDate: _bloc.passportDateOfEmit,
                         title: '*Дата выдачи паспорта',
                         onSaved: (val) => _bloc.passportDateOfEmit = val),
-                    _buildTextInput(
+                    TextInput(
                         '*Орган, выдавший паспорт',
                         'Введите орган, выдавший паспорт',
                         'Введите корректное название',
@@ -105,16 +107,19 @@ class EditCustomerPageBody extends StatelessWidget {
                       _bloc.id,
                       (val) => _bloc.id = val,
                     ),
-                    _buildTextInput(
+                    TextInput(
                         '*Место рождения',
                         'Введите место рождения',
                         'Введите корректное место рождения',
                         r'^[а-яА-Я\s\.0-9-]+$',
                         _bloc.placeOfBirth,
                         (val) => _bloc.placeOfBirth = val),
-                    _selectableField('*Город фактического проживания', city,
-                        _bloc.city, (val) => _bloc.city = val),
-                    _buildTextInput(
+                    SelectableField(
+                        label: '*Город фактического проживания',
+                        values: city,
+                        initVal: _bloc.city,
+                        onChanged: (val) => _bloc.city = val),
+                    TextInput(
                         '*Адрес фактического проживания',
                         'Введите адрес проживания',
                         'Введите корректный адрес проживания',
@@ -142,7 +147,7 @@ class EditCustomerPageBody extends StatelessWidget {
                         (val) => _bloc.mobilePhoneNumber = val,
                         input: TextInputType.number,
                         isReq: false),
-                    _buildTextInput(
+                    TextInput(
                         'E-Mail',
                         'Введите E-Mail',
                         'Введите корректный E-Mail',
@@ -151,7 +156,7 @@ class EditCustomerPageBody extends StatelessWidget {
                         (val) => _bloc.email = val,
                         input: TextInputType.emailAddress,
                         isReq: false),
-                    _buildTextInput(
+                    TextInput(
                         'Место работы',
                         'Введите место работы',
                         'Введите корректное место работы',
@@ -159,7 +164,7 @@ class EditCustomerPageBody extends StatelessWidget {
                         _bloc.workPlace,
                         (val) => _bloc.workPlace = val,
                         isReq: false),
-                    _buildTextInput(
+                    TextInput(
                         'Должность',
                         'Введите должность',
                         'Введите корректную должность',
@@ -167,7 +172,7 @@ class EditCustomerPageBody extends StatelessWidget {
                         _bloc.workPosition,
                         (val) => _bloc.workPosition = val,
                         isReq: false),
-                    _buildTextInput(
+                    TextInput(
                         'Ежемесячный доход',
                         'Введите ежемесачный доход',
                         'Введите корректное значение',
@@ -176,25 +181,31 @@ class EditCustomerPageBody extends StatelessWidget {
                         (val) => _bloc.monthlyIncome = val,
                         input: TextInputType.number,
                         isReq: false),
-                    _selectableField('*Семейное положение', familyStatus,
-                        _bloc.familyStatus, (val) => _bloc.familyStatus = val),
-                    _selectableField('*Гражданство', citizenship,
-                        _bloc.citizenship, (val) => _bloc.citizenship = val),
-                    _selectableField(
-                        '*Инвалидность',
-                        disabilityStatus,
-                        _bloc.disabilityStatus,
-                        (val) => _bloc.disabilityStatus = val),
-                    _selectableField(
-                        '*Пенсионер',
-                        ['Нет', 'Да'],
-                        _bloc.isPensioner ? 'Да' : 'Нет',
-                        (val) => _bloc.isPensioner = val == 'Да'),
-                    _selectableField(
-                        '*Военнообязанный',
-                        ['Нет', 'Да'],
-                        _bloc.isDutyBound ? 'Да' : 'Нет',
-                        (val) => _bloc.isDutyBound = val == 'Да'),
+                    SelectableField(
+                        label: '*Семейное положение',
+                        values: familyStatus,
+                        initVal: _bloc.familyStatus,
+                        onChanged: (val) => _bloc.familyStatus = val),
+                    SelectableField(
+                        label: '*Гражданство',
+                        values: citizenship,
+                        initVal: _bloc.citizenship,
+                        onChanged: (val) => _bloc.citizenship = val),
+                    SelectableField(
+                        label: '*Инвалидность',
+                        values: disabilityStatus,
+                        initVal: _bloc.disabilityStatus,
+                        onChanged: (val) => _bloc.disabilityStatus = val),
+                    SelectableField(
+                        label: '*Пенсионер',
+                        values: ['Нет', 'Да'],
+                        initVal: _bloc.isPensioner ? 'Да' : 'Нет',
+                        onChanged: (val) => _bloc.isPensioner = val == 'Да'),
+                    SelectableField(
+                        label: '*Военнообязанный',
+                        values: ['Нет', 'Да'],
+                        initVal: _bloc.isDutyBound ? 'Да' : 'Нет',
+                        onChanged: (val) => _bloc.isDutyBound = val == 'Да'),
                     _submitButton(context),
                   ],
                 ),
@@ -209,53 +220,6 @@ class EditCustomerPageBody extends StatelessWidget {
       padding: const EdgeInsets.only(top: 24.0),
       child: Text(text,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-    );
-  }
-
-  Widget _buildTextInput(String label, String emptyError, String incorrectError,
-      String regExp, String initial, Function(String) onSaved,
-      {TextInputType input = TextInputType.text, bool isReq = true}) {
-    return TextFormField(
-      keyboardType: input,
-      initialValue: initial,
-      onSaved: onSaved,
-      decoration: InputDecoration(
-        labelText: label,
-        suffixIcon: const Icon(
-          Icons.edit,
-          color: Colors.grey,
-        ),
-      ),
-      validator: (value) {
-        if (value.trim().isEmpty) {
-          return isReq ? emptyError : null;
-        } else if (!value.contains(RegExp(regExp))) {
-          return incorrectError;
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _selectableField(String label, List<String> values, String value,
-      Function(String) onChanged) {
-    return StatefulBuilder(
-      builder: (_, setState) {
-        return DropdownButtonFormField<String>(
-          decoration: InputDecoration(
-            labelText: label,
-          ),
-          items: values
-              .map((val) =>
-                  DropdownMenuItem<String>(value: val, child: Text(val)))
-              .toList(),
-          onChanged: (val) {
-            onChanged(val);
-            setState(() => value = val);
-          },
-          value: value,
-        );
-      },
     );
   }
 

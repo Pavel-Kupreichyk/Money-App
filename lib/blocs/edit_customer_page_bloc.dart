@@ -70,7 +70,7 @@ class EditCustomerBloc implements Disposable {
   Stream<bool> get isAdding => _isAdding;
 
   Future<Status> addEditCustomer() async {
-    if(_isAdding.value) return Status.alreadyAdding;
+    if (_isAdding.value) return Status.alreadyAdding;
 
     _isAdding.add(true);
     Status status = await _prepareDB();
@@ -98,7 +98,8 @@ class EditCustomerBloc implements Disposable {
           disabilityStatus: disabilityStatus,
           monthlyIncome: monthlyIncome,
           isPensioner: isPensioner,
-          isDutyBound: isDutyBound);
+          isDutyBound: isDutyBound,
+          billCount: 0);
       await _dbService.addCustomer(newCustomer);
     }
     _isAdding.add(false);

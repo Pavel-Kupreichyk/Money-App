@@ -1,5 +1,7 @@
+import 'package:money_app/models/bill.dart';
 import 'package:money_app/models/customer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:money_app/models/program.dart';
 import 'package:money_app/models/value_list.dart';
 
 class DbService {
@@ -8,10 +10,22 @@ class DbService {
   CollectionReference get passports =>
       Firestore.instance.collection('Passports');
   CollectionReference get valueLists => Firestore.instance.collection('Lists');
+  CollectionReference get programs => Firestore.instance.collection('Programs');
+  CollectionReference get bills => Firestore.instance.collection('Bills');
 
   Future<List<Customer>> fetchCustomers() async {
     var snapshot = await customers.getDocuments();
     return snapshot.documents.map((doc) => Customer.fromSnapshot(doc)).toList();
+  }
+
+  Future<List<Program>> fetchPrograms() async {
+    var snapshot = await programs.getDocuments();
+    return snapshot.documents.map((doc) => Program.fromSnapshot(doc)).toList();
+  }
+
+  Future<List<Bill>> fetchBills() async {
+    var snapshot = await bills.getDocuments();
+    return snapshot.documents.map((doc) => Bill.fromSnapshot(doc)).toList();
   }
 
   Future<List<ValueList>> fetchLists() async {
@@ -39,6 +53,50 @@ class DbService {
     return doc.exists;
   }
 
+  Future<void> addBill(Bill bill) async {
+    await bills.document(bill.number).setData({
+      'amount': bill.amount,
+      'actualAmount': bill.actualAmount,
+      'currency': bill.currency,
+      'number': bill.number,
+      'owner': bill.owner,
+      'type': bill.type,
+      'percentBill': {
+        'amount': bill.percentBill.amount,
+        'number': bill.percentBill.number,
+        'percent': bill.percentBill.percent,
+        'potentialAmount': bill.percentBill.potentialAmount
+      },
+      'isOpen': bill.isOpen,
+      'month': bill.month,
+    });
+  }
+
+  Future<void> changeBill(String billNum,
+      {PercentBill percentBill,
+      double percentAmount = 0,
+      double potentialAmount = 0,
+      int month,
+      bool isOpen,
+      double mainAmount}) async {
+    await bills.document(billNum).updateData({
+      if (month != null) 'month': FieldValue.increment(month),
+      if (mainAmount != null) 'actualAmount': FieldValue.increment(mainAmount),
+      if (isOpen != null) 'isOpen': isOpen,
+      if (percentBill != null)
+        'percentBill': {
+          'amount': percentBill.amount + percentAmount,
+          'percent': percentBill.percent,
+          'number': percentBill.number,
+          'potentialAmount': percentBill.potentialAmount + potentialAmount
+        }
+    });
+  }
+
+  Future<void> incrementBillCount(String id, int val) async => await customers
+      .document(id)
+      .updateData({'billCount': FieldValue.increment(val)});
+
   Future<void> addCustomer(Customer customer) async {
     await customers.document(customer.id).setData({
       'firstName': customer.firstName,
@@ -63,7 +121,8 @@ class DbService {
       'disabilityStatus': customer.disabilityStatus,
       'monthlyIncome': customer.monthlyIncome,
       'isPensioner': customer.isPensioner,
-      'isDutyBound': customer.isDutyBound
+      'isDutyBound': customer.isDutyBound,
+      'billCount': customer.billCount,
     });
 
     await passports

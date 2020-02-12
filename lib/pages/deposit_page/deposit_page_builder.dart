@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:money_app/blocs/edit_customer_page_bloc.dart';
-import 'package:money_app/models/customer.dart';
-import 'package:money_app/pages/edit_customer_page_body.dart';
+import 'package:money_app/blocs/deposit_page_bloc.dart';
+import 'package:money_app/pages/deposit_page/deposit_page_body.dart';
 import 'package:money_app/pages/main_drawer.dart';
 import 'package:money_app/services/db_service.dart';
 import 'package:provider/provider.dart';
 
-class EditCustomerPageBuilder extends StatelessWidget {
-  final Customer _customer;
-  EditCustomerPageBuilder.edit(this._customer);
-  EditCustomerPageBuilder.add() : _customer = null;
-
+class DepositPageBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ProxyProvider<DbService, EditCustomerBloc>(
-      update: (_, db, prevBloc) => prevBloc ?? EditCustomerBloc(db, _customer),
+    return ProxyProvider<DbService, DepositBloc>(
+      update: (_, db, bloc) => bloc ?? DepositBloc(db),
       dispose: (_, bloc) => bloc.dispose(),
-      child: Consumer<EditCustomerBloc>(
+      child: Consumer<DepositBloc>(
         builder: (_, bloc, __) => Scaffold(
           appBar: AppBar(
             title: Text('Money App'),
@@ -28,10 +23,14 @@ class EditCustomerPageBuilder extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.only(right: 15),
                       child: Center(
-                          child: SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: CircularProgressIndicator(backgroundColor: Colors.white,))),
+                        child: SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.white,
+                          ),
+                        ),
+                      ),
                     );
                   }
                   return Container();
@@ -39,9 +38,9 @@ class EditCustomerPageBuilder extends StatelessWidget {
               )
             ],
           ),
-          body: EditCustomerPageBody(bloc),
+          body: DepositPageBody(bloc),
           drawer: MainDrawer(
-            ignoredButton: MainDrawerButtonType.add,
+            ignoredButton: MainDrawerButtonType.deposit,
           ),
         ),
       ),

@@ -33,7 +33,17 @@ class MainPageBody extends StatelessWidget {
                           ),
                         ),
                       ),
-                      onDismissed: (_) => _bloc.deleteCustomer(index),
+                      onDismissed: (_) {
+                        if (customers[index].billCount == 0) {
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text('Клиент удален')));
+                        } else {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  'Невозможно удалить клиента (есть счета)')));
+                        }
+                        _bloc.deleteCustomer(index);
+                      },
                       child: ListTile(
                         title: Text('${customers[index].combinedName}'),
                         subtitle: Text('Город: ${customers[index].city}\n'

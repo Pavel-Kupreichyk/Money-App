@@ -3,7 +3,7 @@ import 'package:money_app/services/navigation_service.dart';
 import 'package:money_app/support/navigation_info.dart';
 import 'package:provider/provider.dart';
 
-enum MainDrawerButtonType { add, showGroup, deposit, credit }
+enum MainDrawerButtonType { add, showGroup, deposit, bills }
 
 class MainDrawer extends StatelessWidget {
   final MainDrawerButtonType ignoredButton;
@@ -38,17 +38,24 @@ class MainDrawer extends StatelessWidget {
               title: Text('Управление Клиентами'),
               leading: Icon(Icons.group),
               onTap: () => ignoredButton != MainDrawerButtonType.showGroup
-                  ? navService
-                      .pushReplacementWithNavInfo(NavigationInfo.main())
+                  ? navService.pushReplacementWithNavInfo(NavigationInfo.main())
                   : navService.pop(),
             ),
             ListTile(
               title: Text('Открыть Депозит'),
               leading: Icon(Icons.monetization_on),
+              onTap: () => ignoredButton != MainDrawerButtonType.deposit
+                  ? navService.pushReplacementWithNavInfo(
+                      NavigationInfo.createDeposit())
+                  : navService.pop(),
             ),
             ListTile(
-              title: Text('Открыть Кредит'),
-              leading: Icon(Icons.attach_money),
+              title: Text('Закрытие банковского дня'),
+              leading: Icon(Icons.access_time),
+              onTap: () => ignoredButton != MainDrawerButtonType.bills
+                  ? navService
+                      .pushReplacementWithNavInfo(NavigationInfo.bills())
+                  : navService.pop(),
             ),
           ],
         ),
