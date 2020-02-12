@@ -133,6 +133,7 @@ class DepositBloc implements Disposable {
         percentBill: PercentBill(
             amount: 0,
             number: _values.value.percentCode,
+            potentialAmount: 0,
             percent: _values.value.percent * 0.01),
         month: _values.value.time,
         isOpen: true);
@@ -153,7 +154,7 @@ class DepositBloc implements Disposable {
         break;
     }
     await _dbService.addBill(bill);
-    await _dbService.changeBillAmount(Courses.main, convertedVal);
+    await _dbService.changeBill(Courses.main, mainAmount: convertedVal);
     await _dbService.incrementBillCount(_values.value.customer.id, 2);
 
     _isAdding.add(false);

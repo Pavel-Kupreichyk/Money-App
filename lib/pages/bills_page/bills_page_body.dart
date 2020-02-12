@@ -26,7 +26,7 @@ class BillsPageBody extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 8, 6),
                   child: Text(
-                    'СФРБ: ${main.actualAmount} BYN',
+                    'СФРБ: ${main.actualAmount.toStringAsFixed(1)} BYN',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -41,8 +41,8 @@ class BillsPageBody extends StatelessWidget {
                                 Text('Основной счёт: ${bills[index].number}'),
                             subtitle: Text(
                                 'Процентный счёт: ${bills[index].percentBill.number}\n'
-                                'Сумма вклада: ${bills[index].amount} ${bills[index].currency}\n'
-                                'Сумма процентов: ${bills[index].percentBill.amount} ${bills[index].currency}\n'
+                                'Сумма вклада: ${bills[index].amount.toStringAsFixed(1)} ${bills[index].currency}\n'
+                                'Сумма процентов: ${bills[index].percentBill.amount.toStringAsFixed(1)} ${bills[index].currency}\n'
                                 'Месяцев до завершения: ${bills[index].month >= 0 ? bills[index].month : '-'}'),
                             trailing: bills[index].isOpen
                                 ? IconButton(

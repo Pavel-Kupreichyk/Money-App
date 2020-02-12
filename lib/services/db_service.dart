@@ -64,30 +64,32 @@ class DbService {
       'percentBill': {
         'amount': bill.percentBill.amount,
         'number': bill.percentBill.number,
-        'percent': bill.percentBill.percent
+        'percent': bill.percentBill.percent,
+        'potentialAmount': bill.percentBill.potentialAmount
       },
       'isOpen': bill.isOpen,
       'month': bill.month,
     });
   }
 
-  Future<void> closeBill(String number) async {
-    await bills.document(number).updateData({'isOpen': false});
-  }
-
-  Future<void> changeBillAmount(String number, double value) async {
-    await bills
-        .document(number)
-        .updateData({'actualAmount': FieldValue.increment(value)});
-  }
-
-  Future<void> changePercentBillAmount(Bill bill, double value) async {
-    await bills.document(bill.number).updateData({
-      'percentBill': {
-        'amount': bill.percentBill.amount + value,
-        'percent': bill.percentBill.percent,
-        'number': bill.percentBill.number
-      }
+  Future<void> changeBill(String billNum,
+      {PercentBill percentBill,
+      double percentAmount = 0,
+      double potentialAmount = 0,
+      int month,
+      bool isOpen,
+      double mainAmount}) async {
+    await bills.document(billNum).updateData({
+      if (month != null) 'month': FieldValue.increment(month),
+      if (mainAmount != null) 'actualAmount': FieldValue.increment(mainAmount),
+      if (isOpen != null) 'isOpen': isOpen,
+      if (percentBill != null)
+        'percentBill': {
+          'amount': percentBill.amount + percentAmount,
+          'percent': percentBill.percent,
+          'number': percentBill.number,
+          'potentialAmount': percentBill.potentialAmount + potentialAmount
+        }
     });
   }
 

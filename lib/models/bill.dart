@@ -36,6 +36,8 @@ class Bill {
       percentBill: snapshot['percentBill'] != null
           ? PercentBill(
               amount: snapshot['percentBill']['amount'].toDouble(),
+              potentialAmount:
+                  snapshot['percentBill']['potentialAmount'].toDouble(),
               number: snapshot['percentBill']['number'],
               percent: snapshot['percentBill']['percent'].toDouble())
           : null,
@@ -47,7 +49,8 @@ class Bill {
 
 class PercentBill {
   final double amount;
+  final double potentialAmount;
   final String number;
   final double percent;
-  PercentBill({this.amount, this.number, this.percent});
+  PercentBill({this.amount, this.number, this.percent, this.potentialAmount});
 }
