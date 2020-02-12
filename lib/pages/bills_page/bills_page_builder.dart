@@ -17,18 +17,31 @@ class BillsPageBuilder extends StatelessWidget {
             title: Text('Money App'),
             actions: <Widget>[
               StreamBuilder<bool>(
-                  stream: bloc.isLoading,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Container();
-                    }
-
-                    return IconButton(
-                      icon: Icon(Icons.access_time),
-                      color: Colors.white,
-                      onPressed: snapshot.data ? null : bloc.closeDay,
-                    );
-                  })
+                stream: bloc.isLoading,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container();
+                  }
+                  return snapshot.data
+                      ? Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Center(
+                            child: SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: CircularProgressIndicator(
+                                backgroundColor: Colors.white,
+                              ),
+                            ),
+                          ),
+                        )
+                      : IconButton(
+                          icon: Icon(Icons.access_time),
+                          color: Colors.white,
+                          onPressed: bloc.closeDay,
+                        );
+                },
+              )
             ],
           ),
           body: BillsPageBody(bloc),

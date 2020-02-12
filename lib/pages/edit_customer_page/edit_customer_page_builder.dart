@@ -28,10 +28,14 @@ class EditCustomerPageBuilder extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.only(right: 15),
                       child: Center(
-                          child: SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: CircularProgressIndicator(backgroundColor: Colors.white,))),
+                        child: SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.white,
+                          ),
+                        ),
+                      ),
                     );
                   }
                   return Container();
