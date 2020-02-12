@@ -48,10 +48,8 @@ class BillsPageBody extends StatelessWidget {
                                 ? IconButton(
                                     icon: Icon(Icons.lock_open,
                                         color: Colors.green),
-                                    onPressed: bills[index].month < 0
-                                        ? () =>
-                                            _bloc.closeBill(bills[index].number)
-                                        : null,
+                                    onPressed: () =>
+                                        _bloc.closeBill(bills[index].number),
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.lock_outline,

@@ -24,11 +24,11 @@ class BillsPageBuilder extends StatelessWidget {
                   }
                   return snapshot.data
                       ? Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.only(right: 12),
                           child: Center(
                             child: SizedBox(
-                              width: 30,
-                              height: 30,
+                              width: 25,
+                              height: 25,
                               child: CircularProgressIndicator(
                                 backgroundColor: Colors.white,
                               ),
