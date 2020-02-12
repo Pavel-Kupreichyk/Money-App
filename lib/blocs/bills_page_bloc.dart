@@ -35,12 +35,12 @@ class BillsBloc implements Disposable {
     var bill = _bills.value.firstWhere((b) => b.number == number);
     await _dbService.changeBill(
       bill.number,
-      mainAmount: bill.actualAmount,
+      mainAmount: bill.amount,
       isOpen: false,
     );
 
     await _dbService.changeBill(main.number,
-        mainAmount: -1 * _convertToBYN(bill.actualAmount, bill.currency));
+        mainAmount: -1 * _convertToBYN(bill.amount, bill.currency));
     _bills.add(await _dbService.fetchBills());
     _isLoading.add(false);
   }
@@ -71,15 +71,13 @@ class BillsBloc implements Disposable {
             potentialAmount: -1 * bill.percentBill.potentialAmount,
             percentAmount: sum + bill.percentBill.potentialAmount,
             month: -1,
-            mainAmount: bill.actualAmount,
+            mainAmount: bill.amount,
             isOpen: false,
           );
           await _dbService.changeBill(main.number,
               mainAmount: -1 *
                   _convertToBYN(
-                      bill.actualAmount +
-                          sum +
-                          bill.percentBill.potentialAmount,
+                      bill.amount + sum + bill.percentBill.potentialAmount,
                       bill.currency));
         } else if (bill.month == -1) {
           await _dbService.changeBill(bill.number,
